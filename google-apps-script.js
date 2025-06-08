@@ -61,7 +61,6 @@ function processForm(formData) {
     
     // Prepare data
     var rowData = [
-      
       formData.name || "",
       formData.attending || "No",
       formData.location || "",
@@ -77,10 +76,10 @@ function processForm(formData) {
     
     // If user has already submitted, update their row
     if (existingRow > 0) {
-      // Get submission count
-      var submissionCount = parseInt(sheet.getRange(existingRow, 11).getValue()) || 0;
+      // Get submission count from the 10th column (Submission Count)
+      var submissionCount = parseInt(sheet.getRange(existingRow, 10).getValue()) || 0;
       submissionCount++;
-      rowData[10] = submissionCount.toString();
+      rowData[9] = submissionCount.toString();
       
       // Update row
       sheet.getRange(existingRow, 1, 1, rowData.length).setValues([rowData]);
@@ -129,7 +128,8 @@ function findUserRow(sheet, userId) {
   
   // Start from 1 to skip header row
   for (var i = 1; i < values.length; i++) {
-    if (values[i][1] === userId) {
+    // Check column index 8 (9th column) for userId
+    if (values[i][8] === userId) {
       return i + 1; // +1 because sheet rows are 1-indexed
     }
   }
