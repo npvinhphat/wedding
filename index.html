@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phát & Mai's Wedding</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Tangerine:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background-color: #F8F5F2; /* A warm, creamy background */
+            color: #4a4a4a;
+            overflow: hidden; /* Prevent scrolling while preloader/game is active */
+        }
+        .hidden { display: none !important; visibility: hidden !important; }
+        #main-content:not(.hidden) { display: block !important; visibility: visible !important; }
+        .font-tangerine { font-family: 'Tangerine', cursive; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+
+        /* --- Animations & Transitions --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s ease-out, transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Scroll button animation */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-bounce {
+            animation: bounce 2s infinite;
+            opacity: 1 !important;
+        }
+
+        /* --- Hero Section & Preloader --- */
+        .hero-section {
+            background-image: linear-gradient(to top, rgba(0,0,0,0.5), rgba(0,0,0,0.1)), url('images/image-1.jpg');
+            background-size: cover;
+            background-position: center 70%;
+        }
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #F8F5F2;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+        #preloader.hidden { opacity: 0; visibility: hidden; }
+        .heartbeat { animation: heartbeat 1.5s infinite; }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+        
+        /* --- Flappy Game --- */
+        #game-container {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #F8F5F2;
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+        #game-canvas {
+            background-color: #e0f2fe; /* Light sky blue */
+            border-radius: 8px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+
+        /* --- Photo Gallery Lightbox --- */
+        #lightbox { display: none; position: fixed; z-index: 1000; padding-top: 60px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.9); }
+        #lightbox-content { margin: auto; display: block; max-width: 80%; max-height: 80%; }
+        #lightbox-close { position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; transition: 0.3s; }
+        #lightbox-close:hover, #lightbox-close:focus { color: #bbb; text-decoration: none; cursor: pointer; }
+
+        /* --- Form Elements --- */
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="text-center">
+            <i class="fas fa-heart text-6xl text-[#c9a98d] heartbeat"></i>
+            <p class="font-playfair text-xl mt-4 text-[#c9a98d]">Loading...</p>
+        </div>
+    </div>
+    
+    <!-- Flappy Game -->
+    <div id="game-container" class="hidden">
+        <div id="game-ui" class="text-center mb-4 text-[#a37c5b]">
+            <h1 class="font-playfair text-3xl" data-translate-key="gameTitle">Help the Groom Reach the Bride!</h1>
+            <p id="game-instructions" data-translate-key="gameInstructions">Click or Tap to Fly</p>
+        </div>
+        <canvas id="game-canvas" width="320" height="480"></canvas>
+        <div id="game-buttons" class="mt-4 flex space-x-4">
+            <button id="start-game-btn" class="bg-[#a37c5b] text-white font-bold py-2 px-6 rounded-full hover:bg-[#8e6a4f] transition-colors" data-translate-key="startGame">Play</button>
+            <button id="skip-game-btn" class="text-[#a37c5b] font-bold py-2 px-6 rounded-full hover:bg-black/5 transition-colors" data-translate-key="skipGame">Skip</button>
+        </div>
+    </div>
+
+    <!-- Main Website Content -->
+    <div id="main-content" class="hidden" style="opacity: 1; visibility: visible; display: none;">
+        <!-- Controls (Language & Music) -->
+        <div class="fixed top-4 right-4 z-50 flex items-center space-x-2">
+            <button id="music-toggle" class="w-10 h-10 flex items-center justify-center rounded-full text-sm font-semibold bg-white/80 shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a98d]"><i class="fas fa-music"></i></button>
+            <button id="lang-en" class="px-3 py-2 rounded-full text-sm font-semibold bg-white/80 shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a98d]">EN</button>
+            <button id="lang-vi" class="px-3 py-2 rounded-full text-sm font-semibold bg-white/80 shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a98d]">VI</button>
+        </div>
+        <audio id="background-music" loop>
+            <source src="https://eta.vgmtreasurechest.com/soundtracks/remastered-tracks-final-fantasy-viii-2022/hpsenrwdqo/09.%20Fisherman%27s%20Horizon.mp3" type="audio/mpeg">
+        </audio>
+
+        <!-- Hero Section -->
+        <section class="hero-section h-screen flex flex-col justify-end items-center text-white text-center p-8 pb-24">
+            <div class="reveal">
+                <p class="text-xl tracking-widest uppercase" data-translate-key="gettingMarried">We are getting married</p>
+                <h1 class="font-tangerine text-8xl md:text-9xl my-4">Phát & Mai</h1>
+            </div>
+            <div class="absolute bottom-10 animate-bounce">
+                <a href="#story" class="flex flex-col items-center text-white hover:text-white/80 transition-colors duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 13l-7 7-7-7m14-8l-7 7-7-7" />
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- Our Story Section -->
+        <section id="story" class="py-24 md:py-32">
+            <div class="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <img src="images/image-2.jpg" alt="Phat and Mai" class="rounded-lg shadow-2xl w-full h-auto">
+                </div>
+                <div class="reveal">
+                    <div class="flex justify-between items-start">
+                         <div>
+                             <h2 class="font-playfair text-4xl text-[#a37c5b] mb-4" data-translate-key="ourStoryTitle">Our Story</h2>
+                             <div class="w-20 h-px bg-[#c9a98d] mb-6"></div>
+                         </div>
+                    </div>
+                    <div id="story-content" class="text-lg space-y-4">
+                        <p data-translate-key="ourStoryText1">It started with a simple hello. A shared smile across a crowded room that sparked a conversation, leading to a connection we never expected.</p>
+                        <p data-translate-key="ourStoryText2">Our journey has been filled with laughter, adventure, and unwavering support. Now, we're ready for our greatest adventure yet, and we can't wait to share the beginning of our forever with you.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Location Toggle Section -->
+        <section class="py-10">
+            <div class="container mx-auto px-6 text-center">
+                <h3 class="font-playfair text-2xl text-[#a37c5b] mb-6">Choose Your Celebration</h3>
+                <div class="flex justify-center space-x-6">
+                    <button id="location-danang" class="px-8 py-4 rounded-full text-lg font-semibold bg-[#a37c5b] text-white shadow-md hover:bg-[#8e6a4f] transition-all" data-translate-key="daNangLocation">Da Nang</button>
+                    <button id="location-hcmc" class="px-8 py-4 rounded-full text-lg font-semibold bg-white shadow-md hover:bg-gray-100 transition-all" data-translate-key="hcmcLocation">Sai Gon</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Countdown -->
+        <section class="py-20 bg-white/60">
+            <div class="text-center mb-4">
+                <h3 class="font-playfair text-2xl text-[#a37c5b]" id="countdown-title" data-translate-key="countdownTitleDanang">Da Nang Celebration Countdown</h3>
+            </div>
+            <div id="countdown" class="flex justify-center items-center space-x-4 md:space-x-8 text-center text-[#a37c5b]">
+                 <div class="reveal">
+                    <div id="days" class="font-playfair text-5xl md:text-7xl">0</div>
+                    <div class="text-sm uppercase tracking-widest" data-translate-key="days">Days</div>
+                </div>
+                <div class="font-playfair text-5xl md:text-7xl opacity-50 -mt-4 reveal" style="transition-delay: 100ms;">:</div>
+                <div class="reveal" style="transition-delay: 200ms;">
+                    <div id="hours" class="font-playfair text-5xl md:text-7xl">0</div>
+                    <div class="text-sm uppercase tracking-widest" data-translate-key="hours">Hours</div>
+                </div>
+                <div class="font-playfair text-5xl md:text-7xl opacity-50 -mt-4 reveal" style="transition-delay: 300ms;">:</div>
+                <div class="reveal" style="transition-delay: 400ms;">
+                    <div id="minutes" class="font-playfair text-5xl md:text-7xl">0</div>
+                    <div class="text-sm uppercase tracking-widest" data-translate-key="minutes">Minutes</div>
+                </div>
+                <div class="font-playfair text-5xl md:text-7xl opacity-50 -mt-4 reveal" style="transition-delay: 500ms;">:</div>
+                <div class="reveal" style="transition-delay: 600ms;">
+                    <div id="seconds" class="font-playfair text-5xl md:text-7xl">0</div>
+                    <div class="text-sm uppercase tracking-widest" data-translate-key="seconds">Seconds</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Invitation Details Section -->
+        <main id="invitation-details" class="py-24 md:py-32">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-playfair text-4xl text-[#a37c5b]" data-translate-key="theWedding">The Wedding</h2>
+                <p class="text-lg mt-2" data-translate-key="joinUs">Join us as we celebrate</p>
+            </div>
+            
+            <!-- Da Nang Wedding Details -->
+            <div id="danang-details" class="container mx-auto px-6 grid md:grid-cols-3 gap-12 text-center mb-12">
+                <div class="reveal">
+                    <div class="bg-[#f8f3ec] rounded-lg p-6 shadow-md h-full flex flex-col">
+                        <div class="mb-4 flex-grow">
+                            <i class="fas fa-church text-4xl text-[#c9a98d] mb-4"></i>
+                            <h3 class="font-playfair text-2xl" data-translate-key="theCeremony">The Ceremony</h3>
+                            <p data-translate-key="dateDanang">Tuesday, August 5, 2025</p>
+                            <p data-translate-key="timeDanang">at 5:00 PM</p>
+                        </div>
+                        <div class="bg-[#c9a98d] text-white py-2 px-4 rounded-full text-sm inline-block mx-auto">
+                            <span data-translate-key="daNangLabel">Da Nang</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal" style="transition-delay: 200ms;">
+                    <div class="bg-[#f8f3ec] rounded-lg p-6 shadow-md h-full flex flex-col">
+                        <div class="mb-4 flex-grow">
+                            <i class="fas fa-glass-cheers text-4xl text-[#c9a98d] mb-4"></i>
+                            <h3 class="font-playfair text-2xl" data-translate-key="theReception">The Reception</h3>
+                            <p data-translate-key="venueNameDanang">Temple Beach Resort</p>
+                            <p data-translate-key="venueAddressDanang">11 Võ Nguyên Giáp, Phước Mỹ, Sơn Trà</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal" style="transition-delay: 400ms;">
+                    <div class="bg-[#f8f3ec] rounded-lg p-6 shadow-md h-full flex flex-col">
+                        <div class="mb-4 flex-grow">
+                            <i class="fas fa-map-marked-alt text-4xl text-[#c9a98d] mb-4"></i>
+                            <h3 class="font-playfair text-2xl" data-translate-key="gettingThere">Getting There</h3>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Temple+Beach+Resort+Da+Nang+11+Võ+Nguyên+Giáp" target="_blank" class="text-[#a37c5b] underline" data-translate-key="viewMap">View Map</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ho Chi Minh City Wedding Details -->
+            <div id="hcmc-details" class="container mx-auto px-6 grid md:grid-cols-3 gap-12 text-center hidden">
+                <div class="reveal">
+                    <div class="bg-[#f8f3ec] rounded-lg p-6 shadow-md h-full flex flex-col">
+                        <div class="mb-4 flex-grow">
+                            <i class="fas fa-church text-4xl text-[#c9a98d] mb-4"></i>
+                            <h3 class="font-playfair text-2xl" data-translate-key="theCeremony">The Ceremony</h3>
+                            <p data-translate-key="dateHcmc">Monday, August 11, 2025</p>
+                            <p data-translate-key="timeHcmc">at 5:00 PM</p>
+                        </div>
+                        <div class="bg-[#c9a98d] text-white py-2 px-4 rounded-full text-sm inline-block mx-auto">
+                            <span data-translate-key="hcmcLabel">Sai Gon</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal" style="transition-delay: 200ms;">
+                    <div class="bg-[#f8f3ec] rounded-lg p-6 shadow-md h-full flex flex-col">
+                        <div class="mb-4 flex-grow">
+                            <i class="fas fa-glass-cheers text-4xl text-[#c9a98d] mb-4"></i>
+                            <h3 class="font-playfair text-2xl" data-translate-key="theReception">The Reception</h3>
+                            <p data-translate-key="venueNameHcmc">Maison De Charme</p>
+                            <p data-translate-key="venueAddressHcmc">Đ. Trần Xuân Soạn, Tân Hưng, Quận 7</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal" style="transition-delay: 400ms;">
+                    <div class="bg-[#f8f3ec] rounded-lg p-6 shadow-md h-full flex flex-col">
+                        <div class="mb-4 flex-grow">
+                            <i class="fas fa-map-marked-alt text-4xl text-[#c9a98d] mb-4"></i>
+                            <h3 class="font-playfair text-2xl" data-translate-key="gettingThere">Getting There</h3>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Maison+De+Charme+Đ.+Trần+Xuân+Soạn+Tân+Hưng+Quận+7+Hồ+Chí+Minh" target="_blank" class="text-[#a37c5b] underline" data-translate-key="viewMap">View Map</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Photo Gallery -->
+        <section class="bg-white/60 py-24 md:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 reveal">
+                    <h2 class="font-playfair text-4xl text-[#a37c5b]" data-translate-key="galleryTitle">Our Moments</h2>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="reveal">
+                        <img src="images/image-1.jpg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                    </div>
+                     <div class="reveal" style="transition-delay: 150ms;">
+                        <img src="images/image-2.jpg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 mt-8">
+                    </div>
+                     <div class="reveal" style="transition-delay: 300ms;">
+                        <img src="images/image-1.jpg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                    </div>
+                     <div class="reveal" style="transition-delay: 450ms;">
+                        <img src="images/image-2.jpg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 mt-8">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+         <!-- RSVP Section -->
+        <section id="rsvp" class="py-24 md:py-32">
+            <div class="container mx-auto px-6 max-w-xl">
+                <div class="reveal text-center">
+                     <h2 class="font-playfair text-4xl text-[#a37c5b]" data-translate-key="rsvpTitle">Kindly Respond</h2>
+                    <p class="mt-2 mb-8" data-translate-key="rsvpDeadline">Please RSVP by July 15, 2025</p>
+                    <div id="rsvp-container">
+                        <form id="rsvp-form" class="space-y-6 text-left">
+                            <div>
+                                <label for="name" class="block text-sm font-semibold tracking-wider" data-translate-key="nameLabel">Full Name(s)</label>
+                                <input type="text" id="name" name="name" required class="mt-1 block w-full px-4 py-2 bg-transparent border-b border-gray-300 focus:outline-none focus:border-[#c9a98d] transition">
+                            </div>
+                            <div>
+                                <fieldset>
+                                    <legend class="block text-sm font-semibold tracking-wider mb-2" data-translate-key="attendingLabel">Will you be attending?</legend>
+                                    <div class="flex items-center space-x-8">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="attending" value="yes" required class="h-4 w-4 text-[#a37c5b] border-gray-300 focus:ring-[#a37c5b]">
+                                            <span class="ml-2" data-translate-key="attendingYes">Joyfully Accepts</span>
+                                        </label>
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="attending" value="no" class="h-4 w-4 text-[#a37c5b] border-gray-300 focus:ring-[#a37c5b]">
+                                            <span class="ml-2" data-translate-key="attendingNo">Regretfully Declines</span>
+                                        </label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div id="location-field" class="hidden">
+                                <fieldset>
+                                    <legend class="block text-sm font-semibold tracking-wider mb-2" data-translate-key="locationLabel">Which celebration will you attend?</legend>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                                        <label class="flex flex-col items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-[#f8f3ec] transition-colors">
+                                            <input type="radio" name="location" value="danang" required class="h-4 w-4 text-[#a37c5b] border-gray-300 focus:ring-[#a37c5b]">
+                                            <span class="mt-2 font-semibold" data-translate-key="daNangLocation">Da Nang</span>
+                                            <span class="text-sm text-gray-600 mt-1" data-translate-key="dateDanang">Tuesday, August 5, 2025</span>
+                                        </label>
+                                        <label class="flex flex-col items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-[#f8f3ec] transition-colors">
+                                            <input type="radio" name="location" value="hcmc" required class="h-4 w-4 text-[#a37c5b] border-gray-300 focus:ring-[#a37c5b]">
+                                            <span class="mt-2 font-semibold" data-translate-key="hcmcLocation">Sai Gon</span>
+                                            <span class="text-sm text-gray-600 mt-1" data-translate-key="dateHcmc">Monday, August 11, 2025</span>
+                                        </label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div id="guests-field" class="hidden">
+                                <div class="mb-4">
+                                    <label for="guestCount" class="block text-sm font-semibold tracking-wider" data-translate-key="guestCountLabel">Number of Adults (including yourself)</label>
+                                    <div class="flex items-center mt-1">
+                                        <button type="button" id="decrease-guests" class="px-3 py-1 bg-[#f8f3ec] rounded-l-lg border border-gray-300">-</button>
+                                        <input type="number" id="guestCount" name="guestCount" min="1" value="1" class="w-16 text-center py-1 border-t border-b border-gray-300 bg-transparent focus:outline-none">
+                                        <button type="button" id="increase-guests" class="px-3 py-1 bg-[#f8f3ec] rounded-r-lg border border-gray-300">+</button>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <fieldset>
+                                        <legend class="block text-sm font-semibold tracking-wider mb-2" data-translate-key="bringingKidsLabel">Will you be bringing children?</legend>
+                                        <div class="flex items-center space-x-8">
+                                            <label class="flex items-center cursor-pointer">
+                                                <input type="radio" name="bringingKids" value="yes" class="h-4 w-4 text-[#a37c5b] border-gray-300 focus:ring-[#a37c5b]">
+                                                <span class="ml-2" data-translate-key="kidsYes">Yes</span>
+                                            </label>
+                                            <label class="flex items-center cursor-pointer">
+                                                <input type="radio" name="bringingKids" value="no" checked class="h-4 w-4 text-[#a37c5b] border-gray-300 focus:ring-[#a37c5b]">
+                                                <span class="ml-2" data-translate-key="kidsNo">No</span>
+                                            </label>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div id="kids-count-field" class="mb-4 hidden">
+                                    <label for="kidsCount" class="block text-sm font-semibold tracking-wider" data-translate-key="kidsCountLabel">Number of Children</label>
+                                    <div class="flex items-center mt-1">
+                                        <button type="button" id="decrease-kids" class="px-3 py-1 bg-[#f8f3ec] rounded-l-lg border border-gray-300">-</button>
+                                        <input type="number" id="kidsCount" name="kidsCount" min="1" value="1" class="w-16 text-center py-1 border-t border-b border-gray-300 bg-transparent focus:outline-none">
+                                        <button type="button" id="increase-kids" class="px-3 py-1 bg-[#f8f3ec] rounded-r-lg border border-gray-300">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                             <div id="message-field" class="hidden">
+                                <label for="message" class="block text-sm font-semibold tracking-wider" data-translate-key="messageLabel">Leave a message for the couple (optional)</label>
+                                <textarea id="message" name="message" rows="3" class="mt-1 block w-full px-4 py-2 bg-transparent border-b border-gray-300 focus:outline-none focus:border-[#c9a98d] transition"></textarea>
+                            </div>
+                            <div class="text-center pt-4">
+                                <button type="submit" class="bg-[#a37c5b] text-white font-bold py-3 px-10 rounded-full hover:bg-[#8e6a4f] transition-colors duration-300 shadow-lg" data-translate-key="submitRsvp">Submit RSVP</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="rsvp-confirmation" class="hidden mt-6 text-lg text-[#a37c5b] font-semibold"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lightbox Modal -->
+        <div id="lightbox">
+            <span id="lightbox-close">&times;</span>
+            <img id="lightbox-content">
+        </div>
+
+        <footer class="text-center py-12 text-gray-500 text-sm bg-white/60">
+            <p class="font-tangerine text-4xl text-[#a37c5b]">Phát+Mai</p>
+            <p data-translate-key="footerText">Thank you for being part of our story.</p>
+            <p class="mt-4 text-xs">User ID: <span id="user-id-display"></span></p>
+        </footer>
+    </div>
+
+
+    <script>
+        // Google Sheets configuration
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxG7nDMyuqOVaK-OhS90gJ-JkIZhgDSkcqZUOGjQtxaMQwfWjZ9x8bB2wWjAeVtR_DMUg/exec";
+        
+        // --- CONTENT DICTIONARY ---
+        const content = {
+            en: {
+                // Game content
+                gameTitle: "Help Phát Reach Mai!",
+                gameInstructions: "Click or Tap to Fly",
+                startGame: "Play",
+                skipGame: "Skip",
+                gameWin: "You made it! Let's get married!",
+                gameOver: "Oh no! Try again?",
+                playAgain: "Play Again",
+                continueToSite: "Continue",
+                // Main site content
+                gettingMarried: "We are getting married",
+                days: "Days", hours: "Hours", minutes: "Minutes", seconds: "Seconds",
+                ourStoryTitle: "Our Story",
+                ourStoryText1: "It started with a simple hello. A shared smile across a crowded room that sparked a conversation, leading to a connection we never expected.",
+                ourStoryText2: "Our journey has been filled with laughter, adventure, and unwavering support. Now, we're ready for our greatest adventure yet, and we can't wait to share the beginning of our forever with you.",
+                theWedding: "The Wedding", joinUs: "Join us as we celebrate",
+                theCeremony: "The Ceremony", theReception: "The Reception", gettingThere: "Getting There",
+                // Location buttons
+                daNangLocation: "Da Nang",
+                hcmcLocation: "Sai Gon",
+                // Da Nang details
+                dateDanang: "Tuesday, August 5, 2025",
+                timeDanang: "at 5:00 PM",
+                venueNameDanang: "Temple Beach Resort",
+                venueAddressDanang: "11 Võ Nguyên Giáp, Phước Mỹ, Sơn Trà",
+                daNangLabel: "Da Nang",
+                // HCMC details
+                dateHcmc: "Monday, August 11, 2025", 
+                timeHcmc: "at 5:00 PM",
+                venueNameHcmc: "Maison De Charme",
+                venueAddressHcmc: "Đ. Trần Xuân Soạn, Tân Hưng, Quận 7",
+                hcmcLabel: "Sai Gon",
+                // Countdown titles
+                countdownTitleDanang: "Da Nang Celebration Countdown",
+                countdownTitleHcmc: "Sai Gon Celebration Countdown",
+                // Map
+                viewMap: "View Map",
+                galleryTitle: "Our Moments",
+                // RSVP
+                rsvpTitle: "Kindly Respond", 
+                rsvpDeadline: "Please RSVP by July 15, 2025",
+                nameLabel: "Full Name(s)", 
+                attendingLabel: "Will you be attending?",
+                attendingYes: "Joyfully Accepts", 
+                attendingNo: "Regretfully Declines",
+                locationLabel: "Which celebration will you attend?",
+                guestCountLabel: "Number of Adults (including yourself)",
+                bringingKidsLabel: "Will you be bringing children?",
+                kidsYes: "Yes",
+                kidsNo: "No",
+                kidsCountLabel: "Number of Children",
+                messageLabel: "Leave a message for the couple (optional)",
+                submitRsvp: "Submit RSVP",
+                rsvpConfirmYes: "Thank you! We can't wait to celebrate with you.",
+                rsvpConfirmNo: "Thank you for letting us know. You will be missed!",
+                footerText: "Thank you for being part of our story."
+            },
+            vi: {
+                // Game content
+                gameTitle: "Giúp Phát Đến Được Mai!",
+                gameInstructions: "Nhấp Hoặc Chạm Để Bay",
+                startGame: "Chơi",
+                skipGame: "Bỏ Qua",
+                gameWin: "Bạn đã thành công! Cùng kết hôn nào!",
+                gameOver: "Ôi không! Thử lại?",
+                playAgain: "Chơi Lại",
+                continueToSite: "Tiếp Tục",
+                // Main site content
+                gettingMarried: "Chúng tôi sắp kết hôn",
+                days: "Ngày", hours: "Giờ", minutes: "Phút", seconds: "Giây",
+                ourStoryTitle: "Câu Chuyện Của Chúng Tôi",
+                ourStoryText1: "Tất cả bắt đầu với một lời chào đơn giản. Một nụ cười được chia sẻ qua căn phòng đông đúc đã tạo ra một cuộc trò chuyện, dẫn đến một mối liên kết mà chúng tôi không bao giờ ngờ tới.",
+                ourStoryText2: "Hành trình của chúng tôi đã và đang tràn ngập tiếng cười, những cuộc phiêu lưu và sự hỗ trợ không ngừng. Bây giờ, chúng tôi sẵn sàng cho cuộc phiêu lưu vĩ đại nhất của mình, và chúng tôi không thể chờ đợi để chia sẻ khởi đầu của \"mãi mãi\" với bạn.",
+                theWedding: "Lễ Cưới", joinUs: "Hãy tham gia cùng chúng tôi",
+                theCeremony: "Lễ Thành Hôn", theReception: "Tiệc Cưới", gettingThere: "Đường Đến Địa Điểm",
+                // Location buttons
+                daNangLocation: "Đà Nẵng",
+                hcmcLocation: "Sài Gòn",
+                // Da Nang details
+                dateDanang: "Thứ Ba, 05/08/2025",
+                timeDanang: "lúc 17:00",
+                venueNameDanang: "Temple Beach Resort",
+                venueAddressDanang: "11 Võ Nguyên Giáp, Phước Mỹ, Sơn Trà",
+                daNangLabel: "Đà Nẵng",
+                // HCMC details
+                dateHcmc: "Thứ Hai, 11/08/2025", 
+                timeHcmc: "lúc 17:00",
+                venueNameHcmc: "Maison De Charme",
+                venueAddressHcmc: "Đ. Trần Xuân Soạn, Tân Hưng, Quận 7",
+                hcmcLabel: "Sài Gòn",
+                // Countdown titles
+                countdownTitleDanang: "Đếm Ngược Đến Lễ Cưới Đà Nẵng",
+                countdownTitleHcmc: "Đếm Ngược Đến Lễ Cưới Sài Gòn",
+                // Map
+                viewMap: "Xem Bản Đồ",
+                galleryTitle: "Khoảnh Khắc Của Chúng Tôi",
+                // RSVP
+                rsvpTitle: "Vui Lòng Phản Hồi", 
+                rsvpDeadline: "Hãy phản hồi trước ngày 15/07/2025",
+                nameLabel: "Họ Tên", 
+                attendingLabel: "Bạn sẽ tham dự chứ?",
+                attendingYes: "Vui Lòng Xác Nhận", 
+                attendingNo: "Tiếc Rằng Không Thể Tham Dự",
+                locationLabel: "Bạn sẽ tham dự lễ cưới ở đâu?",
+                guestCountLabel: "Số lượng khách (bao gồm bạn)",
+                bringingKidsLabel: "Bạn có đưa trẻ em đi cùng không?",
+                kidsYes: "Có",
+                kidsNo: "Không",
+                kidsCountLabel: "Số lượng trẻ em",
+                messageLabel: "Để lại lời nhắn cho cặp đôi (tùy chọn)",
+                submitRsvp: "Gửi Phản Hồi",
+                rsvpConfirmYes: "Cảm ơn bạn! Chúng tôi rất mong chờ được gặp bạn.",
+                rsvpConfirmNo: "Cảm ơn bạn đã thông báo. Chúng tôi sẽ nhớ bạn!",
+                footerText: "Cảm ơn vì đã là một phần trong câu chuyện của chúng tôi."
+            }
+        };
+
+        let currentLanguage = 'en';
+        // Generate a random user ID for tracking submissions 
+        const userId = 'user_' + Math.random().toString(36).substr(2, 9);
+
+        // --- FUNCTION DEFINITIONS ---
+
+
+        // --- FUNCTION DEFINITIONS ---
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('[data-translate-key]').forEach(element => {
+                const key = element.getAttribute('data-translate-key');
+                if (content[lang] && content[lang][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = content[lang][key];
+                    } else {
+                        element.textContent = content[lang][key];
+                    }
+                }
+            });
+        }
+        function handleScrollAnimations() {
+            const elements = document.querySelectorAll('.reveal');
+            const options = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, options);
+            
+            elements.forEach(el => observer.observe(el));
+        }
+        function handleMusic() { 
+            const musicToggle = document.getElementById('music-toggle');
+            const backgroundMusic = document.getElementById('background-music');
+            if (!musicToggle || !backgroundMusic) return;
+            
+            musicToggle.addEventListener('click', () => {
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                    musicToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+                } else {
+                    backgroundMusic.pause();
+                    musicToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                }
+            });
+        }
+        function handlePhotoGallery() {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-content');
+            const lightboxClose = document.getElementById('lightbox-close');
+            
+            document.querySelectorAll('.gallery-img').forEach(img => {
+                img.addEventListener('click', () => {
+                    lightboxImg.src = img.src;
+                    lightbox.style.display = 'block';
+                });
+            });
+            
+            lightboxClose.addEventListener('click', () => {
+                lightbox.style.display = 'none';
+            });
+        }
+        // Global variable to store current location
+        let currentLocation = 'danang';
+        
+        function startCountdown() {
+            const weddingDates = {
+                'danang': new Date('August 5, 2025 17:00:00').getTime(),
+                'hcmc': new Date('August 11, 2025 17:00:00').getTime()
+            };
+            
+            const updateCountdown = () => {
+                const now = new Date().getTime();
+                const weddingDate = weddingDates[currentLocation];
+                const distance = weddingDate - now;
+                
+                if (distance > 0) {
+                    document.getElementById('days').textContent = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    document.getElementById('hours').textContent = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    document.getElementById('minutes').textContent = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    document.getElementById('seconds').textContent = Math.floor((distance % (1000 * 60)) / 1000);
+                }
+                
+                // Update the countdown title
+                const countdownTitle = document.getElementById('countdown-title');
+                if (countdownTitle) {
+                    countdownTitle.textContent = content[currentLanguage][
+                        currentLocation === 'danang' ? 'countdownTitleDanang' : 'countdownTitleHcmc'
+                    ];
+                }
+            };
+            
+            updateCountdown(); // Run once immediately
+            return setInterval(updateCountdown, 1000); // Then run every second and return interval ID
+        }
+
+        function handleRsvpForm() {
+            const form = document.getElementById('rsvp-form');
+            if (!form) return;
+            const messageField = document.getElementById('message-field');
+            const locationField = document.getElementById('location-field');
+            const guestsField = document.getElementById('guests-field');
+            const kidsCountField = document.getElementById('kids-count-field');
+            
+            // Set up the guest count and kids count buttons
+            const setupCounterButtons = () => {
+                // Adult guest counter
+                const decreaseGuests = document.getElementById('decrease-guests');
+                const increaseGuests = document.getElementById('increase-guests');
+                const guestCountInput = document.getElementById('guestCount');
+                
+                if (decreaseGuests && increaseGuests && guestCountInput) {
+                    decreaseGuests.addEventListener('click', () => {
+                        const currentValue = parseInt(guestCountInput.value);
+                        if (currentValue > 1) {
+                            guestCountInput.value = currentValue - 1;
+                        }
+                    });
+                    
+                    increaseGuests.addEventListener('click', () => {
+                        const currentValue = parseInt(guestCountInput.value);
+                        guestCountInput.value = currentValue + 1;
+                    });
+                }
+                
+                // Kids counter
+                const decreaseKids = document.getElementById('decrease-kids');
+                const increaseKids = document.getElementById('increase-kids');
+                const kidsCountInput = document.getElementById('kidsCount');
+                
+                if (decreaseKids && increaseKids && kidsCountInput) {
+                    decreaseKids.addEventListener('click', () => {
+                        const currentValue = parseInt(kidsCountInput.value);
+                        if (currentValue > 1) {
+                            kidsCountInput.value = currentValue - 1;
+                        }
+                    });
+                    
+                    increaseKids.addEventListener('click', () => {
+                        const currentValue = parseInt(kidsCountInput.value);
+                        kidsCountInput.value = currentValue + 1;
+                    });
+                }
+            };
+            
+            // Set up counter buttons
+            setupCounterButtons();
+            
+            // Function to handle initial form state and field visibility
+            const updateFieldVisibility = () => {
+                const attendingValue = form.querySelector('input[name="attending"]:checked')?.value;
+                const isAttending = attendingValue === 'yes';
+                
+                // Message field is always visible regardless of attendance status
+                if (messageField) {
+                    messageField.classList.remove('hidden');
+                }
+                
+                if (locationField) {
+                    if (isAttending) {
+                        locationField.classList.remove('hidden');
+                    } else {
+                        locationField.classList.add('hidden');
+                    }
+                }
+                
+                if (guestsField) {
+                    if (isAttending) {
+                        guestsField.classList.remove('hidden');
+                    } else {
+                        guestsField.classList.add('hidden');
+                    }
+                }
+                
+                const bringingKidsValue = form.querySelector('input[name="bringingKids"]:checked')?.value;
+                if (kidsCountField) {
+                    if (bringingKidsValue === 'yes') {
+                        kidsCountField.classList.remove('hidden');
+                    } else {
+                        kidsCountField.classList.add('hidden');
+                    }
+                }
+            };
+            
+            // Initial update when the form loads
+            updateFieldVisibility();
+            
+            // Listen to changes on attendance radio buttons
+            const attendingRadios = form.querySelectorAll('input[name="attending"]');
+            attendingRadios.forEach(radio => {
+                radio.addEventListener('change', updateFieldVisibility);
+            });
+            
+            // Listen to changes on bringing kids radio buttons
+            const bringingKidsRadios = form.querySelectorAll('input[name="bringingKids"]');
+            bringingKidsRadios.forEach(radio => {
+                radio.addEventListener('change', updateFieldVisibility);
+            });
+            
+            // Listen to location changes
+            const locationRadios = form.querySelectorAll('input[name="location"]');
+            locationRadios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    // Pre-select the same location in the RSVP form as the one selected for viewing
+                    switchLocation(e.target.value);
+                });
+            });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Disable the submit button to prevent multiple submissions
+                const submitButton = form.querySelector('button[type="submit"]');
+                submitButton.disabled = true;
+                submitButton.textContent = '...';
+                
+                const name = form.name.value;
+                const attending = form.attending.value === 'yes';
+                const message = form.message.value || '';
+                
+                // Only collect these values if attending
+                let location = null;
+                let guestCount = 1;
+                let bringingKids = false;
+                let kidsCount = 0;
+                
+                if (attending) {
+                    location = form.location.value;
+                    guestCount = parseInt(form.guestCount.value) || 1;
+                    
+                    // Check if the bringingKids radio buttons exist and are selected
+                    const bringingKidsRadios = form.querySelectorAll('input[name="bringingKids"]');
+                    if (bringingKidsRadios.length > 0) {
+                        const bringingKidsRadio = Array.from(bringingKidsRadios).find(radio => radio.checked);
+                        if (bringingKidsRadio) {
+                            bringingKids = bringingKidsRadio.value === 'yes';
+                            
+                            if (bringingKids && form.kidsCount) {
+                                kidsCount = parseInt(form.kidsCount.value) || 0;
+                            }
+                        }
+                    }
+                }
+                
+                // Create URL with parameters
+                let url = GOOGLE_SCRIPT_URL + '?';
+                url += 'name=' + encodeURIComponent(name);
+                url += '&attending=' + encodeURIComponent(attending ? 'Yes' : 'No');
+                url += '&message=' + encodeURIComponent(message);
+                url += '&userId=' + encodeURIComponent(userId);
+                url += '&submittedAt=' + encodeURIComponent(new Date().toISOString());
+                
+                if (attending) {
+                    url += '&location=' + encodeURIComponent(location);
+                    url += '&guestCount=' + encodeURIComponent(guestCount);
+                    url += '&bringingKids=' + encodeURIComponent(bringingKids ? 'Yes' : 'No');
+                    url += '&kidsCount=' + encodeURIComponent(kidsCount);
+                }
+                
+                // Use JSONP approach with iframe to avoid CORS
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+                
+                iframe.onload = function() {
+                    // Show confirmation after iframe loads
+                    document.getElementById('rsvp-container').style.display = 'none';
+                    const confirmationDiv = document.getElementById('rsvp-confirmation');
+                    confirmationDiv.textContent = attending ? content[currentLanguage].rsvpConfirmYes : content[currentLanguage].rsvpConfirmNo;
+                    confirmationDiv.style.display = 'block';
+                    
+                    // Clean up iframe after a short delay
+                    setTimeout(function() {
+                        document.body.removeChild(iframe);
+                    }, 500);
+                };
+                
+                iframe.onerror = function() {
+                    console.error("Error submitting form");
+                    alert("There was an error submitting your RSVP. Please try again.");
+                    submitButton.disabled = false;
+                    submitButton.textContent = content[currentLanguage].submitRsvp;
+                    document.body.removeChild(iframe);
+                };
+                
+                // Navigate iframe to our form URL
+                iframe.src = url;
+            });
+        }
+        
+        // Empty placeholder function since we removed AI functionality
+        function handleStoryAi() {
+            // AI functionality removed
+        }
+
+        function initializeSite() {
+            // Display user ID in the footer
+            const userIdDisplay = document.getElementById('user-id-display');
+            if (userIdDisplay) {
+                userIdDisplay.textContent = userId.substring(0, 8);
+            }
+        }
+
+        // Function to switch between Da Nang and HCMC locations
+        function switchLocation(location) {
+            currentLocation = location;
+            
+            // Update UI for location buttons
+            const danangBtn = document.getElementById('location-danang');
+            const hcmcBtn = document.getElementById('location-hcmc');
+            
+            if (location === 'danang') {
+                // Apply active styles to Da Nang button
+                danangBtn.classList.add('bg-[#a37c5b]', 'text-white');
+                danangBtn.classList.remove('bg-white');
+                
+                // Remove active styles from HCMC button
+                hcmcBtn.classList.remove('bg-[#a37c5b]', 'text-white');
+                hcmcBtn.classList.add('bg-white');
+                
+                // Show Da Nang details, hide HCMC details
+                document.getElementById('danang-details').classList.remove('hidden');
+                document.getElementById('hcmc-details').classList.add('hidden');
+            } else {
+                // Apply active styles to HCMC button
+                hcmcBtn.classList.add('bg-[#a37c5b]', 'text-white');
+                hcmcBtn.classList.remove('bg-white');
+                
+                // Remove active styles from Da Nang button
+                danangBtn.classList.remove('bg-[#a37c5b]', 'text-white');
+                danangBtn.classList.add('bg-white');
+                
+                // Show HCMC details, hide Da Nang details
+                document.getElementById('hcmc-details').classList.remove('hidden');
+                document.getElementById('danang-details').classList.add('hidden');
+            }
+            
+            // Update RSVP form location radio if it exists
+            const rsvpForm = document.getElementById('rsvp-form');
+            if (rsvpForm) {
+                const locationRadios = rsvpForm.querySelectorAll('input[name="location"]');
+                locationRadios.forEach(radio => {
+                    radio.checked = radio.value === location;
+                });
+            }
+            
+            // Also update the countdown title
+            const countdownTitle = document.getElementById('countdown-title');
+            if (countdownTitle) {
+                countdownTitle.textContent = content[currentLanguage][
+                    location === 'danang' ? 'countdownTitleDanang' : 'countdownTitleHcmc'
+                ];
+            }
+        }
+
+        function showMainContent() {
+            // First make sure the main content exists and is ready
+            const mainContent = document.getElementById('main-content');
+            const gameContainer = document.getElementById('game-container');
+            
+            // Hide game and show main content
+            if (gameContainer) gameContainer.classList.add('hidden');
+            if (mainContent) mainContent.classList.remove('hidden');
+            document.body.style.overflow = 'auto';
+            
+            // Use a small timeout to ensure the DOM has updated visibility before initializing
+            setTimeout(() => {
+                // Initialize main site JS after it's visible
+                setLanguage('en'); // Set initial language first
+                handleScrollAnimations();
+                startCountdown();
+                handleMusic();
+                handlePhotoGallery();
+                handleRsvpForm();
+                
+                // Ensure scroll button is visible
+                const scrollButton = document.querySelector('.hero-section .absolute.bottom-10');
+                if (scrollButton) {
+                    scrollButton.style.opacity = '1';
+                }
+                
+                // Set up language switcher buttons
+                const langEn = document.getElementById('lang-en');
+                const langVi = document.getElementById('lang-vi');
+                
+                if (langEn) {
+                    langEn.addEventListener('click', function() {
+                        setLanguage('en');
+                        langEn.classList.add('bg-[#c9a98d]', 'text-white');
+                        langVi.classList.remove('bg-[#c9a98d]', 'text-white');
+                    });
+                }
+                
+                if (langVi) {
+                    langVi.addEventListener('click', function() {
+                        setLanguage('vi');
+                        langVi.classList.add('bg-[#c9a98d]', 'text-white');
+                        langEn.classList.remove('bg-[#c9a98d]', 'text-white');
+                    });
+                }
+                
+                // Highlight the active language
+                langEn.classList.add('bg-[#c9a98d]', 'text-white');
+                
+                // Set up location switcher buttons
+                const danangBtn = document.getElementById('location-danang');
+                const hcmcBtn = document.getElementById('location-hcmc');
+                
+                if (danangBtn) {
+                    danangBtn.addEventListener('click', function() {
+                        switchLocation('danang');
+                    });
+                }
+                
+                if (hcmcBtn) {
+                    hcmcBtn.addEventListener('click', function() {
+                        switchLocation('hcmc');
+                    });
+                }
+                
+                // Pre-select the bringing kids radio button to "No"
+                const kidsNoRadio = document.querySelector('input[name="bringingKids"][value="no"]');
+                if (kidsNoRadio) {
+                    kidsNoRadio.checked = true;
+                }
+                
+                // Set initial location to Da Nang
+                switchLocation('danang');
+                
+                // We don't need to add event listeners here as they are now handled in the handleRsvpForm function
+            }, 100);
+        }
+
+        // --- FLAPPY GROOM GAME LOGIC ---
+        function initializeGame() {
+            const canvas = document.getElementById('game-canvas');
+            const ctx = canvas.getContext('2d');
+            const gameUi = document.getElementById('game-ui');
+            const gameInstructions = document.getElementById('game-instructions');
+            const gameButtons = document.getElementById('game-buttons');
+            const startGameBtn = document.getElementById('start-game-btn');
+            const skipGameBtn = document.getElementById('skip-game-btn');
+            
+            let gameState = 'start';
+            let score = 0;
+            const gravity = 0.15;
+            const flapStrength = -4;
+            const pipeSpeed = -1.2;
+            const pipeGap = 150;
+            const pipeSpawnInterval = 150;
+            const winScore = 3;
+            let frameCount = 0;
+            let animationFrameId;
+
+            const groomImg = new Image(); groomImg.src = 'images/image-2.jpg';
+            const brideImg = new Image(); brideImg.src = 'images/image-1.jpg';
+            const obstacleImages = [
+                'images/image-1.jpg',
+                'images/image-2.jpg'
+            ].map(src => { const img = new Image(); img.src = src; return img; });
+
+            startGameBtn.disabled = true;
+            startGameBtn.textContent = 'Loading...';
+            let loadedCount = 0;
+            const totalImages = obstacleImages.length + 2;
+            [groomImg, brideImg, ...obstacleImages].forEach(img => img.onload = () => {
+                loadedCount++;
+                if (loadedCount === totalImages) {
+                    startGameBtn.disabled = false;
+                    startGameBtn.textContent = content[currentLanguage].startGame;
+                }
+            });
+
+            const player = { x: 50, y: 150, width: 40, height: 40, velocityY: 0 };
+            let pipes = [];
+            const bride = { x: canvas.width + 500, y: canvas.height / 2 - 30, width: 60, height: 60, active: false };
+
+            function resetGame() {
+                player.y = 150;
+                player.velocityY = 0;
+                pipes = [];
+                score = 0;
+                frameCount = 0;
+                bride.active = false;
+                bride.x = canvas.width + 100 * winScore;
+                gameState = 'playing';
+                gameUi.classList.add('hidden');
+                gameButtons.classList.add('hidden');
+                
+                // Cancel any previous loop and start a new one
+                if(animationFrameId) cancelAnimationFrame(animationFrameId);
+                gameLoop();
+            }
+
+            function flap() { if (gameState === 'playing') player.velocityY = flapStrength; }
+
+            function addPipe() {
+                const pipeHeight = Math.floor(Math.random() * (canvas.height - pipeGap - 100)) + 50;
+                const obstacleImg = obstacleImages[Math.floor(Math.random() * obstacleImages.length)];
+                pipes.push({ x: canvas.width, y: 0, width: 50, height: pipeHeight, img: obstacleImg, passed: false });
+                pipes.push({ x: canvas.width, y: pipeHeight + pipeGap, width: 50, height: canvas.height - pipeHeight - pipeGap, img: obstacleImg, passed: true });
+            }
+
+            function update() {
+                if (gameState !== 'playing') return;
+                player.velocityY += gravity;
+                player.y += player.velocityY;
+
+                frameCount++;
+                if (frameCount % pipeSpawnInterval === 0 && !bride.active) addPipe();
+                pipes.forEach(pipe => {
+                    pipe.x += pipeSpeed;
+                    // Check if pipe has been passed
+                    if (!pipe.passed && pipe.x + pipe.width < player.x) {
+                        pipe.passed = true;
+                        if (!pipe.top) score++;
+                        // Activate bride after reaching winScore
+                        if (score >= winScore && !bride.active) {
+                            bride.active = true;
+                        }
+                    }
+                });
+                pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
+                if (bride.active) bride.x += pipeSpeed;
+
+                if (player.y + player.height > canvas.height || player.y < 0) endGame('over');
+                for (const pipe of pipes) {
+                    if (
+                        player.x < pipe.x + pipe.width &&
+                        player.x + player.width > pipe.x &&
+                        player.y < pipe.y + pipe.height &&
+                        player.y + player.height > pipe.y
+                    ) {
+                        endGame('over');
+                        return;
+                    }
+                }
+                
+                // Check collision with bride
+                if (
+                    bride.active &&
+                    player.x < bride.x + bride.width &&
+                    player.x + player.width > bride.x &&
+                    player.y < bride.y + bride.height &&
+                    player.y + player.height > bride.y
+                ) {
+                    endGame('win');
+                }
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw player
+                ctx.drawImage(groomImg, player.x, player.y, player.width, player.height);
+                
+                // Draw pipes
+                pipes.forEach(pipe => {
+                    ctx.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
+                });
+                
+                // Draw bride when active
+                if (bride.active) {
+                    ctx.drawImage(brideImg, bride.x, bride.y, bride.width, bride.height);
+                }
+                
+                // Draw score
+                ctx.fillStyle = '#a37c5b';
+                ctx.font = '24px Playfair Display';
+                ctx.textAlign = 'center';
+                ctx.fillText(score, canvas.width / 2, 30);
+            }
+            
+            function gameLoop() {
+                update();
+                draw();
+                if (gameState === 'playing') {
+                    animationFrameId = requestAnimationFrame(gameLoop);
+                }
+            }
+            
+            function endGame(status) {
+                gameState = status;
+                if(animationFrameId) cancelAnimationFrame(animationFrameId);
+
+                gameUi.classList.remove('hidden');
+                gameButtons.classList.remove('hidden');
+                
+                if (status === 'win') {
+                    gameInstructions.textContent = content[currentLanguage].gameWin;
+                    startGameBtn.textContent = content[currentLanguage].continueToSite;
+                    skipGameBtn.style.display = 'none';
+                } else { // 'over'
+                    gameInstructions.textContent = content[currentLanguage].gameOver;
+                    startGameBtn.textContent = content[currentLanguage].playAgain;
+                    skipGameBtn.style.display = 'block';
+                }
+            }
+            
+            // --- Set up initial button listeners ---
+            canvas.addEventListener('click', flap);
+            
+            skipGameBtn.addEventListener('click', showMainContent);
+
+            startGameBtn.addEventListener('click', () => {
+                switch(gameState) {
+                    case 'start':
+                    case 'over':
+                        resetGame();
+                        break;
+                    case 'win':
+                        showMainContent();
+                        break;
+                }
+            });
+
+            // Initial drawing
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#a37c5b';
+            ctx.font = '20px "Playfair Display"';
+            ctx.textAlign = 'center';
+            ctx.fillText('Get Ready!', canvas.width/2, canvas.height/2);
+        }
+
+        // --- MAIN INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeSite();
+            const preloader = document.getElementById('preloader');
+            const gameContainer = document.getElementById('game-container');
+            window.setTimeout(() => {
+                preloader.classList.add('hidden');
+                gameContainer.classList.remove('hidden');
+                initializeGame();
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
