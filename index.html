@@ -416,6 +416,20 @@
             <img id="lightbox-content">
         </div>
 
+        <!-- Thank You Popup -->
+        <div id="thankyou-popup" class="fixed inset-0 bg-black/50 z-[1001] hidden flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-xl p-8 max-w-md mx-4 text-center transform transition-all scale-100 opacity-100">
+                <div class="mb-4 text-[#a37c5b]">
+                    <i class="fas fa-heart text-4xl animate-pulse"></i>
+                </div>
+                <h3 class="font-tangerine text-5xl mb-4 text-[#a37c5b]">Thank You!</h3>
+                <p id="thankyou-message" class="font-playfair mb-6 text-lg"></p>
+                <button id="thankyou-close" class="bg-[#a37c5b] text-white font-bold py-2 px-6 rounded-full hover:bg-[#8e6a4f] transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+
         <footer class="text-center py-12 text-gray-500 text-sm bg-white/60">
             <p class="font-tangerine text-4xl text-[#a37c5b]">Phát+Mai</p>
             <p data-translate-key="footerText">Thank you for being part of our story.</p>
@@ -426,7 +440,7 @@
 
     <script>
         // Google Sheets configuration
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxG7nDMyuqOVaK-OhS90gJ-JkIZhgDSkcqZUOGjQtxaMQwfWjZ9x8bB2wWjAeVtR_DMUg/exec";
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzEKp8k3ZQl83cDDCw0l-F9jADLWswbiT-FAMcXqp6AMjAzgD97h9IDQyS1MaxGC1EEsw/exec";
         
         // --- CONTENT DICTIONARY ---
         const content = {
@@ -798,55 +812,76 @@
                     }
                 }
                 
-                // Create URL with parameters
-                let url = GOOGLE_SCRIPT_URL + '?';
-                url += 'name=' + encodeURIComponent(name);
-                url += '&attending=' + encodeURIComponent(attending ? 'Yes' : 'No');
-                url += '&message=' + encodeURIComponent(message);
-                url += '&userId=' + encodeURIComponent(userId);
-                url += '&submittedAt=' + encodeURIComponent(new Date().toISOString());
+                // Create form data object
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('attending', attending ? 'Yes' : 'No');
+                formData.append('message', message);
+                formData.append('userId', userId);
+                formData.append('submittedAt', new Date().toISOString());
                 
                 if (attending) {
-                    url += '&location=' + encodeURIComponent(location);
-                    url += '&guestCount=' + encodeURIComponent(guestCount);
-                    url += '&bringingKids=' + encodeURIComponent(bringingKids ? 'Yes' : 'No');
-                    url += '&kidsCount=' + encodeURIComponent(kidsCount);
+                    formData.append('location', location);
+                    formData.append('guestCount', guestCount);
+                    formData.append('bringingKids', bringingKids ? 'Yes' : 'No');
+                    formData.append('kidsCount', kidsCount);
                 }
                 
-                // Use JSONP approach with iframe to avoid CORS
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                document.body.appendChild(iframe);
-                
-                iframe.onload = function() {
-                    // Show confirmation after iframe loads
+                // Use fetch API with POST request
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors' // This prevents CORS issues
+                })
+                .then(response => {
+                    // Show confirmation
                     document.getElementById('rsvp-container').style.display = 'none';
                     const confirmationDiv = document.getElementById('rsvp-confirmation');
                     confirmationDiv.textContent = attending ? content[currentLanguage].rsvpConfirmYes : content[currentLanguage].rsvpConfirmNo;
                     confirmationDiv.style.display = 'block';
                     
-                    // Clean up iframe after a short delay
-                    setTimeout(function() {
-                        document.body.removeChild(iframe);
-                    }, 500);
-                };
-                
-                iframe.onerror = function() {
-                    console.error("Error submitting form");
+                    // Show a stylish popup
+                    showThankYouPopup(attending);
+                })
+                .catch(error => {
+                    console.error("Error submitting form:", error);
                     alert("There was an error submitting your RSVP. Please try again.");
                     submitButton.disabled = false;
                     submitButton.textContent = content[currentLanguage].submitRsvp;
-                    document.body.removeChild(iframe);
-                };
-                
-                // Navigate iframe to our form URL
-                iframe.src = url;
+                });
             });
         }
         
         // Empty placeholder function since we removed AI functionality
         function handleStoryAi() {
             // AI functionality removed
+        }
+        
+        function showThankYouPopup(attending) {
+            // Get the popup elements
+            const popup = document.getElementById('thankyou-popup');
+            const message = document.getElementById('thankyou-message');
+            const closeButton = document.getElementById('thankyou-close');
+            
+            // Set the appropriate message based on attendance
+            if (attending) {
+                message.textContent = content[currentLanguage].rsvpConfirmYes;
+            } else {
+                message.textContent = content[currentLanguage].rsvpConfirmNo;
+            }
+            
+            // Show the popup with animation
+            popup.classList.remove('hidden');
+            
+            // Add event listener for the close button
+            closeButton.addEventListener('click', () => {
+                popup.classList.add('hidden');
+            });
+            
+            // Auto-close after 5 seconds
+            setTimeout(() => {
+                popup.classList.add('hidden');
+            }, 5000);
         }
 
         function initializeSite() {
