@@ -52,6 +52,20 @@
             animation: bounce 2s infinite;
             opacity: 1 !important;
         }
+        
+        /* Safari-specific fixes */
+        @supports (-webkit-touch-callout: none) {
+            .safari-scroll-fix {
+                position: relative;
+                bottom: 0;
+                margin-top: 2rem;
+                z-index: 5;
+            }
+            
+            .hero-section {
+                padding-bottom: 6rem; /* Increase bottom padding on hero section in Safari */
+            }
+        }
 
         /* --- Hero Section & Preloader --- */
         .hero-section {
@@ -153,7 +167,7 @@
                 <p class="text-xl tracking-widest uppercase" data-translate-key="gettingMarried">We are getting married</p>
                 <h1 class="font-tangerine text-8xl md:text-9xl my-4">Phát & Mai</h1>
             </div>
-            <div class="absolute bottom-10 animate-bounce">
+            <div class="absolute bottom-10 animate-bounce safari-scroll-fix">
                 <a href="#story" class="flex flex-col items-center text-white hover:text-white/80 transition-colors duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 13l-7 7-7-7m14-8l-7 7-7-7" />
