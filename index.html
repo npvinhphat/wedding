@@ -118,6 +118,12 @@
     
     <!-- Flappy Game -->
     <div id="game-container" class="hidden">
+        <!-- Language Toggle for Game Page -->
+        <div class="absolute top-4 right-4 z-50 flex items-center space-x-2">
+            <button id="game-lang-en" class="px-3 py-2 rounded-full text-sm font-semibold bg-white/80 shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a98d]">EN</button>
+            <button id="game-lang-vi" class="px-3 py-2 rounded-full text-sm font-semibold bg-white/80 shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a98d]">VI</button>
+        </div>
+        
         <div id="game-ui" class="text-center mb-4 text-[#a37c5b]">
             <h1 class="font-playfair text-3xl" data-translate-key="gameTitle">Flappy Groom</h1>
             <p id="game-instructions" data-translate-key="gameInstructions">Click or Tap to Fly</p>
@@ -324,7 +330,7 @@
             <div class="container mx-auto px-6 max-w-xl">
                 <div class="reveal text-center">
                      <h2 class="font-playfair text-4xl text-[#a37c5b]" data-translate-key="rsvpTitle">Kindly Respond</h2>
-                    <p class="mt-2 mb-8" data-translate-key="rsvpDeadline">Please RSVP by July 15, 2025</p>
+                    <p class="mt-2 mb-8" data-translate-key="rsvpDeadline">Please RSVP by July 15, 2025. You can update your response anytime.</p>
                     <div id="rsvp-container">
                         <form id="rsvp-form" class="space-y-6 text-left">
                             <div>
@@ -422,9 +428,9 @@
                 <div class="mb-4 text-[#a37c5b]">
                     <i class="fas fa-heart text-4xl animate-pulse"></i>
                 </div>
-                <h3 class="font-tangerine text-5xl mb-4 text-[#a37c5b]">Thank You!</h3>
+                <h3 class="font-tangerine text-5xl mb-4 text-[#a37c5b]" data-translate-key="thankYouTitle">Thank You!</h3>
                 <p id="thankyou-message" class="font-playfair mb-6 text-lg"></p>
-                <button id="thankyou-close" class="bg-[#a37c5b] text-white font-bold py-2 px-6 rounded-full hover:bg-[#8e6a4f] transition-colors">
+                <button id="thankyou-close" class="bg-[#a37c5b] text-white font-bold py-2 px-6 rounded-full hover:bg-[#8e6a4f] transition-colors" data-translate-key="closeButton">
                     Close
                 </button>
             </div>
@@ -538,7 +544,7 @@
                 galleryTitle: "Our Moments",
                 // RSVP
                 rsvpTitle: "Kindly Respond", 
-                rsvpDeadline: "Please RSVP by July 15, 2025",
+                rsvpDeadline: "Please RSVP by July 15, 2025. You can update your response anytime.",
                 nameLabel: "Full Name(s)", 
                 attendingLabel: "Will you be attending?",
                 attendingYes: "Joyfully Accepts", 
@@ -553,6 +559,10 @@
                 submitRsvp: "Submit RSVP",
                 rsvpConfirmYes: "Thank you! We can't wait to celebrate with you.",
                 rsvpConfirmNo: "Thank you for letting us know. You will be missed!",
+                rsvpUpdateYes: "Thank you for updating your RSVP. We're looking forward to seeing you!",
+                rsvpUpdateNo: "Thank you for updating your RSVP. We're sorry you won't be able to make it.",
+                thankYouTitle: "Thank You!",
+                closeButton: "Close",
                 footerText: "Thank you for being part of our story."
             },
             vi: {
@@ -596,7 +606,7 @@
                 galleryTitle: "Khoảnh Khắc Của Chúng Tôi",
                 // RSVP
                 rsvpTitle: "Vui Lòng Phản Hồi", 
-                rsvpDeadline: "Hãy phản hồi trước ngày 15/07/2025",
+                rsvpDeadline: "Hãy phản hồi trước ngày 15/07/2025. Bạn có thể cập nhật phản hồi của mình bất cứ lúc nào.",
                 nameLabel: "Họ Tên", 
                 attendingLabel: "Bạn sẽ tham dự chứ?",
                 attendingYes: "Vui Lòng Xác Nhận", 
@@ -611,7 +621,11 @@
                 submitRsvp: "Gửi Phản Hồi",
                 rsvpConfirmYes: "Cảm ơn bạn! Chúng tôi rất mong chờ được gặp bạn.",
                 rsvpConfirmNo: "Cảm ơn bạn đã thông báo. Chúng tôi sẽ nhớ bạn!",
-                footerText: "Cảm ơn vì đã là một phần trong câu chuyện của chúng tôi."
+                footerText: "Cảm ơn vì đã là một phần trong câu chuyện của chúng tôi.",
+                rsvpUpdateYes: "Cảm ơn bạn đã cập nhật phản hồi. Chúng tôi rất mong được gặp bạn!",
+                rsvpUpdateNo: "Cảm ơn bạn đã cập nhật phản hồi. Rất tiếc vì bạn không thể tham dự.",
+                thankYouTitle: "Cảm ơn!",
+                closeButton: "Đóng"
             }
         };
 
@@ -644,6 +658,7 @@
         // --- FUNCTION DEFINITIONS ---
 
         function setLanguage(lang) {
+            console.log(`Changing language to: ${lang}`);
             currentLanguage = lang;
             document.querySelectorAll('[data-translate-key]').forEach(element => {
                 const key = element.getAttribute('data-translate-key');
@@ -653,8 +668,38 @@
                     } else {
                         element.textContent = content[lang][key];
                     }
+                } else {
+                    console.warn(`Missing translation for key: ${key} in language: ${lang}`);
                 }
             });
+            
+            // Save language preference in cookies
+            CookieUtil.setCookie('weddingLanguage', lang, 365);
+            
+            // Also add to comprehensive user data
+            updateUserCookieData({
+                languagePreference: lang,
+                languageLastChanged: new Date().toISOString()
+            });
+            
+            // Update any dynamic content that might not be covered by data-translate-key
+            if (document.getElementById('rsvp-confirmation') && document.getElementById('rsvp-confirmation').style.display !== 'none') {
+                // If the RSVP confirmation is visible, update its text
+                const attending = CookieUtil.getCookie('wedding_rsvpAttending') === 'true';
+                document.getElementById('rsvp-confirmation').textContent = attending ? 
+                    content[currentLanguage].rsvpConfirmYes : 
+                    content[currentLanguage].rsvpConfirmNo;
+            }
+            
+            // Update countdown title based on current location
+            const countdownTitle = document.getElementById('countdown-title');
+            if (countdownTitle) {
+                countdownTitle.textContent = content[currentLanguage][
+                    currentLocation === 'danang' ? 'countdownTitleDanang' : 'countdownTitleHcmc'
+                ];
+            }
+            
+            return lang; // Return for chaining
         }
         function handleScrollAnimations() {
             const elements = document.querySelectorAll('.reveal');
@@ -1026,9 +1071,11 @@
             // Set the appropriate message based on attendance
             if (isResubmission) {
                 // Custom message for returning users updating their RSVP
-                message.textContent = attending 
-                    ? "Thank you for updating your RSVP. We're looking forward to seeing you!" 
-                    : "Thank you for updating your RSVP. We're sorry you won't be able to make it.";
+                if (attending) {
+                    message.textContent = content[currentLanguage].rsvpUpdateYes;
+                } else {
+                    message.textContent = content[currentLanguage].rsvpUpdateNo;
+                }
             } else {
                 // Standard message for first-time submissions
                 if (attending) {
@@ -1040,6 +1087,10 @@
             
             // Show the popup with animation
             popup.classList.remove('hidden');
+            
+            // Update the title and close button text based on current language
+            document.querySelector('#thankyou-popup h3').textContent = content[currentLanguage].thankYouTitle;
+            closeButton.textContent = content[currentLanguage].closeButton;
             
             // Add event listener for the close button
             closeButton.addEventListener('click', () => {
@@ -1214,8 +1265,15 @@
             
             // Use a small timeout to ensure the DOM has updated visibility before initializing
             setTimeout(() => {
+                // Check for saved language preference
+                let savedLanguage = CookieUtil.getCookie('weddingLanguage') || 'en';
+                // Only accept valid languages
+                if (savedLanguage !== 'en' && savedLanguage !== 'vi') {
+                    savedLanguage = 'en';
+                }
+                
                 // Initialize main site JS after it's visible
-                setLanguage('en'); // Set initial language first
+                setLanguage(savedLanguage); // Set language based on user preference
                 handleScrollAnimations();
                 startCountdown();
                 handleMusic();
@@ -1248,8 +1306,14 @@
                     });
                 }
                 
-                // Highlight the active language
-                langEn.classList.add('bg-[#c9a98d]', 'text-white');
+                // Highlight the active language based on saved preference
+                if (currentLanguage === 'vi') {
+                    langVi.classList.add('bg-[#c9a98d]', 'text-white');
+                    langEn.classList.remove('bg-[#c9a98d]', 'text-white');
+                } else {
+                    langEn.classList.add('bg-[#c9a98d]', 'text-white');
+                    langVi.classList.remove('bg-[#c9a98d]', 'text-white');
+                }
                 
                 // Set up location switcher buttons
                 const danangBtn = document.getElementById('location-danang');
@@ -1289,6 +1353,8 @@
             const gameButtons = document.getElementById('game-buttons');
             const startGameBtn = document.getElementById('start-game-btn');
             const skipGameBtn = document.getElementById('skip-game-btn');
+            const gameLangEn = document.getElementById('game-lang-en');
+            const gameLangVi = document.getElementById('game-lang-vi');
             
             let gameState = 'start';
             let score = 0;
@@ -1314,9 +1380,11 @@
             const totalImages = obstacleImages.length + 2;
             [groomImg, brideImg, ...obstacleImages].forEach(img => img.onload = () => {
                 loadedCount++;
-                if (loadedCount === totalImages) {
-                    startGameBtn.disabled = false;
-                    startGameBtn.textContent = content[currentLanguage].startGame;
+                if (loadedCount === totalImages) {            startGameBtn.disabled = false;
+            // Set the button text based on the current language
+            startGameBtn.textContent = content[currentLanguage].startGame;
+            // Also update the skip button text
+            skipGameBtn.textContent = content[currentLanguage].skipGame;
                 }
             });
 
@@ -1362,6 +1430,7 @@
                     // Check if pipe has been passed
                     if (!pipe.passed && pipe.x + pipe.width < player.x) {
                         pipe.passed = true;
+                        // Update score but don't display it
                         if (!pipe.top) score++;
                         // Activate bride after reaching winScore
                         if (score >= winScore && !bride.active) {
@@ -1413,11 +1482,7 @@
                     ctx.drawImage(brideImg, bride.x, bride.y, bride.width, bride.height);
                 }
                 
-                // Draw score
-                ctx.fillStyle = '#a37c5b';
-                ctx.font = '24px Playfair Display';
-                ctx.textAlign = 'center';
-                ctx.fillText(score, canvas.width / 2, 30);
+                // Score display has been removed as requested
             }
             
             function gameLoop() {
@@ -1443,14 +1508,15 @@
                     updateUserCookieData({
                         gameCompleted: true,
                         gameCompletedAt: new Date().toISOString(),
-                        gameScore: score,
                         gameWin: true
                     });
                     
+                    // Update with localized text
                     gameInstructions.textContent = content[currentLanguage].gameWin;
                     startGameBtn.textContent = content[currentLanguage].continueToSite;
                     skipGameBtn.style.display = 'none';
                 } else { // 'over'
+                    // Update with localized text
                     gameInstructions.textContent = content[currentLanguage].gameOver;
                     startGameBtn.textContent = content[currentLanguage].playAgain;
                     skipGameBtn.style.display = 'block';
@@ -1461,7 +1527,6 @@
                     
                     updateUserCookieData({
                         gameAttempts: attempts + 1,
-                        lastGameScore: score,
                         lastGameAttempt: new Date().toISOString()
                     });
                 }
@@ -1483,6 +1548,37 @@
                         break;
                 }
             });
+            
+            // Set up language toggle for game page
+            if (gameLangEn && gameLangVi) {
+                // Check for saved language preference
+                let savedLanguage = CookieUtil.getCookie('weddingLanguage') || 'en';
+                
+                // Set initial language state for game
+                setLanguage(savedLanguage);
+                
+                // Set active language button styling
+                if (savedLanguage === 'vi') {
+                    gameLangVi.classList.add('bg-[#c9a98d]', 'text-white');
+                    gameLangEn.classList.remove('bg-[#c9a98d]', 'text-white');
+                } else {
+                    gameLangEn.classList.add('bg-[#c9a98d]', 'text-white');
+                    gameLangVi.classList.remove('bg-[#c9a98d]', 'text-white');
+                }
+                
+                // Add click event listeners
+                gameLangEn.addEventListener('click', function() {
+                    setLanguage('en');
+                    gameLangEn.classList.add('bg-[#c9a98d]', 'text-white');
+                    gameLangVi.classList.remove('bg-[#c9a98d]', 'text-white');
+                });
+                
+                gameLangVi.addEventListener('click', function() {
+                    setLanguage('vi');
+                    gameLangVi.classList.add('bg-[#c9a98d]', 'text-white');
+                    gameLangEn.classList.remove('bg-[#c9a98d]', 'text-white');
+                });
+            }
 
             // Initial drawing
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1497,6 +1593,10 @@
             initializeSite();
             const preloader = document.getElementById('preloader');
             const gameContainer = document.getElementById('game-container');
+            
+            // Load saved language preference
+            const savedLanguage = CookieUtil.getCookie('weddingLanguage') || 'en';
+            currentLanguage = savedLanguage;
             
             // Check if user has already completed the game
             const gameCompleted = CookieUtil.getCookie('weddingGameCompleted') === 'true';

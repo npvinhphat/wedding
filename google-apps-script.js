@@ -2,7 +2,7 @@
 
 // Global variables
 const SHEET_NAME = "RSVP Responses";
-const EMAIL_CC = "npvinhphat@gmail.com";
+const EMAILS = ["npvinhphat@gmail.com", "maitnp93@gmail.com"];
 const SENDER_NAME = "Wedding RSVP System";
 
 /**
@@ -164,9 +164,12 @@ function sendNewSubmissionEmail(formData) {
     body += "User ID: " + formData.userId + "\n";
     body += "Submitted At: " + new Date().toLocaleString();
     
-    if (EMAIL_CC) {
-      GmailApp.sendEmail(EMAIL_CC, subject, body, {
-        name: SENDER_NAME
+    if (EMAILS && EMAILS.length > 0) {
+      // Send to all email recipients
+      EMAILS.forEach(email => {
+        GmailApp.sendEmail(email, subject, body, {
+          name: SENDER_NAME
+        });
       });
     }
   } catch (e) {
@@ -202,9 +205,12 @@ function sendUpdateEmail(formData, submissionCount) {
     body += "User ID: " + formData.userId + "\n";
     body += "Updated At: " + new Date().toLocaleString();
     
-    if (EMAIL_CC) {
-      GmailApp.sendEmail(EMAIL_CC, subject, body, {
-        name: SENDER_NAME
+    if (EMAILS && EMAILS.length > 0) {
+      // Send to all email recipients
+      EMAILS.forEach(email => {
+        GmailApp.sendEmail(email, subject, body, {
+          name: SENDER_NAME
+        });
       });
     }
   } catch (e) {
