@@ -119,7 +119,7 @@
     <!-- Flappy Game -->
     <div id="game-container" class="hidden">
         <div id="game-ui" class="text-center mb-4 text-[#a37c5b]">
-            <h1 class="font-playfair text-3xl" data-translate-key="gameTitle">Help the Groom Reach the Bride!</h1>
+            <h1 class="font-playfair text-3xl" data-translate-key="gameTitle">Flappy Groom</h1>
             <p id="game-instructions" data-translate-key="gameInstructions">Click or Tap to Fly</p>
         </div>
         <canvas id="game-canvas" width="320" height="480"></canvas>
@@ -439,8 +439,61 @@
 
 
     <script>
+        // Cookie utility functions
+        const CookieUtil = {
+            setCookie: function(name, value, days) {
+                const expires = new Date();
+                expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+                document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+                console.log(`Cookie set: ${name}=${value}`);
+            },
+            
+            getCookie: function(name) {
+                const nameEQ = `${name}=`;
+                const ca = document.cookie.split(';');
+                for(let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            },
+            
+            deleteCookie: function(name) {
+                document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/`;
+            },
+            
+            getAllCookies: function() {
+                const cookies = {};
+                const cookieStr = document.cookie;
+                const cookiePairs = cookieStr.split(';');
+                
+                cookiePairs.forEach(pair => {
+                    const [name, value] = pair.trim().split('=');
+                    if (name && value) cookies[name] = value;
+                });
+                
+                return cookies;
+            },
+            
+            debugCookies: function() {
+                console.log('All cookies:', document.cookie);
+                const cookies = this.getAllCookies();
+                console.table(cookies);
+                return cookies;
+            }
+        };
+
+        // Cookies debug helper (used only in development)
+        function debugCookies() {
+            console.log('All cookies:', document.cookie);
+            const cookies = CookieUtil.getAllCookies();
+            console.table(cookies);
+            return cookies;
+        }
+
         // Google Sheets configuration
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzEKp8k3ZQl83cDDCw0l-F9jADLWswbiT-FAMcXqp6AMjAzgD97h9IDQyS1MaxGC1EEsw/exec";
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrBUnLsl2kWfyKQ8B2phdsi_NAxAZBeTIYG6SzpiiTcgyw9f7NE16fdSr8rbb-Obs2aA/exec";
         
         // --- CONTENT DICTIONARY ---
         const content = {
@@ -564,7 +617,26 @@
 
         let currentLanguage = 'en';
         // Generate a random user ID for tracking submissions 
-        const userId = 'user_' + Math.random().toString(36).substr(2, 9);
+        // Get or create a userId
+        let userId;
+        try {
+            userId = CookieUtil.getCookie('weddingUserId');
+            
+            // Log to see if we're getting the userId
+            console.log('Retrieved userId from cookie:', userId);
+            
+            if (!userId) {
+                // If no userId exists, create a new one
+                userId = 'user_' + Math.random().toString(36).substr(2, 9);
+                // Store it in a cookie that lasts for 1 year
+                CookieUtil.setCookie('weddingUserId', userId, 365);
+                console.log('Created new userId:', userId);
+            }
+        } catch (error) {
+            console.error('Error managing userId cookie:', error);
+            // Fallback
+            userId = 'user_' + Math.random().toString(36).substr(2, 9);
+        }
 
         // --- FUNCTION DEFINITIONS ---
 
@@ -755,6 +827,67 @@
             // Initial update when the form loads
             updateFieldVisibility();
             
+            // Check if user has submitted before and pre-fill the form
+            const userData = getUserData();
+            if (userData.rsvpSubmitted) {
+                // Pre-fill name
+                if (userData.rsvpName && form.name) {
+                    form.name.value = userData.rsvpName;
+                }
+                
+                // Pre-select attendance choice
+                const attendingYesRadio = form.querySelector('input[name="attending"][value="yes"]');
+                const attendingNoRadio = form.querySelector('input[name="attending"][value="no"]');
+                
+                if (userData.rsvpAttending && attendingYesRadio) {
+                    attendingYesRadio.checked = true;
+                } else if (attendingNoRadio) {
+                    attendingNoRadio.checked = true;
+                }
+                
+                // Update field visibility after setting attendance
+                updateFieldVisibility();
+                
+                // If attending, pre-fill more fields
+                if (userData.rsvpAttending) {
+                    // Pre-select location
+                    if (userData.rsvpLocation) {
+                        const locationRadio = form.querySelector(`input[name="location"][value="${userData.rsvpLocation}"]`);
+                        if (locationRadio) {
+                            locationRadio.checked = true;
+                        }
+                    }
+                    
+                    // Pre-fill guest count
+                    if (userData.rsvpGuestCount && form.guestCount) {
+                        form.guestCount.value = userData.rsvpGuestCount;
+                    }
+                    
+                    // Pre-select kids option
+                    const kidsYesRadio = form.querySelector('input[name="bringingKids"][value="yes"]');
+                    const kidsNoRadio = form.querySelector('input[name="bringingKids"][value="no"]');
+                    
+                    if (userData.rsvpBringingKids && kidsYesRadio) {
+                        kidsYesRadio.checked = true;
+                    } else if (kidsNoRadio) {
+                        kidsNoRadio.checked = true;
+                    }
+                    
+                    // Pre-fill kids count
+                    if (userData.rsvpKidsCount && form.kidsCount) {
+                        form.kidsCount.value = userData.rsvpKidsCount;
+                    }
+                    
+                    // Update kids count field visibility
+                    updateFieldVisibility();
+                }
+                
+                // Pre-fill message
+                if (userData.rsvpMessage && form.message) {
+                    form.message.value = userData.rsvpMessage;
+                }
+            }
+            
             // Listen to changes on attendance radio buttons
             const attendingRadios = form.querySelectorAll('input[name="attending"]');
             attendingRadios.forEach(radio => {
@@ -784,9 +917,22 @@
                 submitButton.disabled = true;
                 submitButton.textContent = '...';
                 
+                // Check if this user has submitted an RSVP before
+                const isResubmission = CookieUtil.getCookie('weddingRsvpSubmitted') === 'true';
+                // Set the cookie for future submissions
+                CookieUtil.setCookie('weddingRsvpSubmitted', 'true', 365);
+                
                 const name = form.name.value;
                 const attending = form.attending.value === 'yes';
                 const message = form.message.value || '';
+                
+                // Store RSVP data in the comprehensive user data cookie
+                const rsvpData = {
+                    rsvpSubmitted: true,
+                    rsvpSubmittedAt: new Date().toISOString(),
+                    rsvpName: name,
+                    rsvpAttending: attending
+                };
                 
                 // Only collect these values if attending
                 let location = null;
@@ -820,6 +966,10 @@
                 formData.append('userId', userId);
                 formData.append('submittedAt', new Date().toISOString());
                 
+                // Send game completion status
+                const gameCompleted = CookieUtil.getCookie('weddingGameCompleted') === 'true';
+                formData.append('gameCompleted', gameCompleted ? 'Yes' : 'No');
+                
                 if (attending) {
                     formData.append('location', location);
                     formData.append('guestCount', guestCount);
@@ -834,14 +984,29 @@
                     mode: 'no-cors' // This prevents CORS issues
                 })
                 .then(response => {
+                    // Update the RSVP data with additional information
+                    if (attending) {
+                        rsvpData.rsvpLocation = location;
+                        rsvpData.rsvpGuestCount = guestCount;
+                        rsvpData.rsvpBringingKids = bringingKids;
+                        rsvpData.rsvpKidsCount = kidsCount;
+                    }
+                    
+                    if (message) {
+                        rsvpData.rsvpMessage = message;
+                    }
+                    
+                    // Add RSVP data to user profile
+                    updateUserCookieData(rsvpData);
+                    
                     // Show confirmation
                     document.getElementById('rsvp-container').style.display = 'none';
                     const confirmationDiv = document.getElementById('rsvp-confirmation');
                     confirmationDiv.textContent = attending ? content[currentLanguage].rsvpConfirmYes : content[currentLanguage].rsvpConfirmNo;
                     confirmationDiv.style.display = 'block';
                     
-                    // Show a stylish popup
-                    showThankYouPopup(attending);
+                    // Show a stylish popup with resubmission flag
+                    showThankYouPopup(attending, isResubmission);
                 })
                 .catch(error => {
                     console.error("Error submitting form:", error);
@@ -852,22 +1017,25 @@
             });
         }
         
-        // Empty placeholder function since we removed AI functionality
-        function handleStoryAi() {
-            // AI functionality removed
-        }
-        
-        function showThankYouPopup(attending) {
+        function showThankYouPopup(attending, isResubmission) {
             // Get the popup elements
             const popup = document.getElementById('thankyou-popup');
             const message = document.getElementById('thankyou-message');
             const closeButton = document.getElementById('thankyou-close');
             
             // Set the appropriate message based on attendance
-            if (attending) {
-                message.textContent = content[currentLanguage].rsvpConfirmYes;
+            if (isResubmission) {
+                // Custom message for returning users updating their RSVP
+                message.textContent = attending 
+                    ? "Thank you for updating your RSVP. We're looking forward to seeing you!" 
+                    : "Thank you for updating your RSVP. We're sorry you won't be able to make it.";
             } else {
-                message.textContent = content[currentLanguage].rsvpConfirmNo;
+                // Standard message for first-time submissions
+                if (attending) {
+                    message.textContent = content[currentLanguage].rsvpConfirmYes;
+                } else {
+                    message.textContent = content[currentLanguage].rsvpConfirmNo;
+                }
             }
             
             // Show the popup with animation
@@ -884,11 +1052,101 @@
             }, 5000);
         }
 
+        // Function to store all user data in one place
+        function updateUserCookieData(data) {
+            // Get existing data or create new object
+            let userData = {};
+            const storedData = CookieUtil.getCookie('weddingUserData');
+            
+            if (storedData) {
+                try {
+                    userData = JSON.parse(decodeURIComponent(storedData));
+                } catch (e) {
+                    console.error('Error parsing stored user data:', e);
+                    userData = {};
+                }
+            }
+            
+            // Update with new data
+            userData = {...userData, ...data, lastVisit: new Date().toISOString()};
+            
+            try {
+                // Store as JSON string, properly encoded for cookies
+                const jsonString = JSON.stringify(userData);
+                CookieUtil.setCookie('weddingUserData', encodeURIComponent(jsonString), 365);
+                
+                // Also store individual key values as separate cookies for redundancy
+                for (const [key, value] of Object.entries(data)) {
+                    if (typeof value === 'object') {
+                        CookieUtil.setCookie('wedding_' + key, encodeURIComponent(JSON.stringify(value)), 365);
+                    } else {
+                        CookieUtil.setCookie('wedding_' + key, encodeURIComponent(value), 365);
+                    }
+                }
+            } catch (e) {
+                console.error('Error storing cookie data:', e);
+            }
+            
+            return userData;
+        }
+        
+        // Function to get user data
+        function getUserData() {
+            const storedData = CookieUtil.getCookie('weddingUserData');
+            
+            if (storedData) {
+                try {
+                    return JSON.parse(decodeURIComponent(storedData));
+                } catch (e) {
+                    console.error('Error parsing stored user data:', e);
+                    
+                    // Try to reconstruct from individual cookies
+                    const allCookies = CookieUtil.getAllCookies();
+                    const userData = {};
+                    
+                    for (const [key, value] of Object.entries(allCookies)) {
+                        if (key.startsWith('wedding_')) {
+                            const properKey = key.replace('wedding_', '');
+                            try {
+                                userData[properKey] = JSON.parse(decodeURIComponent(value));
+                            } catch {
+                                userData[properKey] = decodeURIComponent(value);
+                            }
+                        }
+                    }
+                    
+                    return userData;
+                }
+            }
+            
+            return {};
+        }
+
+        // Site initialization
         function initializeSite() {
             // Display user ID in the footer
             const userIdDisplay = document.getElementById('user-id-display');
             if (userIdDisplay) {
                 userIdDisplay.textContent = userId.substring(0, 8);
+            }
+            
+            // Track site visits using cookies
+            const userData = getUserData();
+            
+            // If it's a returning user
+            if (userData.visits) {
+                // Increment visit count
+                updateUserCookieData({
+                    visits: userData.visits + 1,
+                    returning: true
+                });
+            } else {
+                // First visit
+                updateUserCookieData({
+                    visits: 1,
+                    firstVisit: new Date().toISOString(),
+                    returning: false
+                });
             }
         }
 
@@ -1178,6 +1436,17 @@
                 gameButtons.classList.remove('hidden');
                 
                 if (status === 'win') {
+                    // Save game completion status in a cookie (expires in 1 year)
+                    CookieUtil.setCookie('weddingGameCompleted', 'true', 365);
+                    
+                    // Store additional game completion data
+                    updateUserCookieData({
+                        gameCompleted: true,
+                        gameCompletedAt: new Date().toISOString(),
+                        gameScore: score,
+                        gameWin: true
+                    });
+                    
                     gameInstructions.textContent = content[currentLanguage].gameWin;
                     startGameBtn.textContent = content[currentLanguage].continueToSite;
                     skipGameBtn.style.display = 'none';
@@ -1185,6 +1454,16 @@
                     gameInstructions.textContent = content[currentLanguage].gameOver;
                     startGameBtn.textContent = content[currentLanguage].playAgain;
                     skipGameBtn.style.display = 'block';
+                    
+                    // Track game attempts
+                    const userData = getUserData();
+                    const attempts = userData.gameAttempts || 0;
+                    
+                    updateUserCookieData({
+                        gameAttempts: attempts + 1,
+                        lastGameScore: score,
+                        lastGameAttempt: new Date().toISOString()
+                    });
                 }
             }
             
@@ -1218,10 +1497,21 @@
             initializeSite();
             const preloader = document.getElementById('preloader');
             const gameContainer = document.getElementById('game-container');
+            
+            // Check if user has already completed the game
+            const gameCompleted = CookieUtil.getCookie('weddingGameCompleted') === 'true';
+            
             window.setTimeout(() => {
                 preloader.classList.add('hidden');
-                gameContainer.classList.remove('hidden');
-                initializeGame();
+                
+                if (gameCompleted) {
+                    // Skip game if already completed
+                    showMainContent();
+                } else {
+                    // Show game if not completed
+                    gameContainer.classList.remove('hidden');
+                    initializeGame();
+                }
             }, 1500);
         });
     </script>
