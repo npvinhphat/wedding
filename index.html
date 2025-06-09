@@ -102,6 +102,13 @@
         #lightbox-close:hover, #lightbox-close:focus { color: #bbb; text-decoration: none; cursor: pointer; }
 
         /* --- Form Elements --- */
+        
+        /* Custom styles for wedding announcement text */
+        .letter-spacing-wider {
+            letter-spacing: 0.3em;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+            font-family: 'Cormorant Garamond', serif;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -129,7 +136,7 @@
         <!-- Hero Section -->
         <section class="hero-section h-screen flex flex-col justify-end items-center text-white text-center p-8 pb-24">
             <div class="reveal">
-                <p class="text-xl tracking-widest uppercase">We are getting married</p>
+                <p class="text-xl tracking-widest uppercase font-bold letter-spacing-wider" data-translate-key="gettingMarried">We are getting married</p>
                 <h1 class="font-tangerine text-8xl md:text-9xl my-4">Phát & Mai</h1>
             </div>
             <div class="absolute bottom-10 animate-bounce safari-scroll-fix">
@@ -509,7 +516,7 @@
             },
             vi: {
                 // Main site content
-                gettingMarried: "Chúng mình sắp kết hôn",
+                gettingMarried: "CHÚNG MÌNH SẮP CƯỚI",
                 days: "Ngày", hours: "Giờ", minutes: "Phút", seconds: "Giây",
                 ourStoryTitle: "Câu Chuyện Của Chúng Mình",
                 ourStoryText1: "Mọi chuyện bắt đầu từ một buổi ăn tối với bạn chung mà cả hai đều lười đi, nhưng rất may là chúng mình đã không bỏ lỡ. Qua vài lần gặp gỡ khá ngại ngùng, tụi mình bắt đầu kết nối với nhau qua sở thích về âm nhạc, gửi cho nhau nhiều bài hát hay ho, và dần dần xây dựng một mối gắn kết tự nhiên.",
@@ -1162,11 +1169,11 @@
             
             // Use a small timeout to ensure the DOM has updated visibility before initializing
             setTimeout(() => {
-                // Check for saved language preference
-                let savedLanguage = CookieUtil.getCookie('weddingLanguage') || 'en';
+                // Check for saved language preference, default to Vietnamese if none found
+                let savedLanguage = CookieUtil.getCookie('weddingLanguage') || 'vi';
                 // Only accept valid languages
                 if (savedLanguage !== 'en' && savedLanguage !== 'vi') {
-                    savedLanguage = 'en';
+                    savedLanguage = 'vi';
                 }
                 
                 // Initialize main site JS after it's visible
@@ -1206,11 +1213,20 @@
                     });
                 }
                 
-                // Set Vietnamese as default and highlight it
-                langVi.classList.add('bg-[#c9a98d]', 'text-white');
-                langVi.classList.remove('text-[#a37c5b]');
-                langEn.classList.remove('bg-[#c9a98d]', 'text-white');
-                langEn.classList.add('text-[#a37c5b]', 'bg-white/80');
+                // Set button states based on saved language preference
+                const savedLang = CookieUtil.getCookie('weddingLanguage') || 'vi';
+                
+                if (savedLang === 'vi') {
+                    langVi.classList.add('bg-[#c9a98d]', 'text-white');
+                    langVi.classList.remove('text-[#a37c5b]', 'bg-white/80');
+                    langEn.classList.remove('bg-[#c9a98d]', 'text-white');
+                    langEn.classList.add('text-[#a37c5b]', 'bg-white/80');
+                } else {
+                    langEn.classList.add('bg-[#c9a98d]', 'text-white');
+                    langEn.classList.remove('text-[#a37c5b]', 'bg-white/80');
+                    langVi.classList.remove('bg-[#c9a98d]', 'text-white');
+                    langVi.classList.add('text-[#a37c5b]', 'bg-white/80');
+                }
                 
                 // Set up location switcher buttons
                 const danangBtn = document.getElementById('location-danang');
@@ -1246,9 +1262,14 @@
             initializeSite();
             const preloader = document.getElementById('preloader');
             
-            // Load saved language preference
-            const savedLanguage = CookieUtil.getCookie('weddingLanguage') || 'en';
+            // Load saved language preference or default to Vietnamese
+            const savedLanguage = CookieUtil.getCookie('weddingLanguage') || 'vi';
             currentLanguage = savedLanguage;
+            
+            // Store this in cookie in case it's a first visit
+            if (!CookieUtil.getCookie('weddingLanguage')) {
+                CookieUtil.setCookie('weddingLanguage', 'vi', 365);
+            }
             
             window.setTimeout(() => {
                 preloader.classList.add('hidden');
