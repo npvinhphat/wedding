@@ -74,8 +74,8 @@ function processForm(formData) {
     
     // If user has already submitted, update their row
     if (existingRow > 0) {
-      // Get submission count from the 10th column (Submission Count)
-      var submissionCount = parseInt(sheet.getRange(existingRow, 10).getValue()) || 0;
+      // Get submission count from the 9th column (Submission Count)
+      var submissionCount = parseInt(sheet.getRange(existingRow, 9).getValue()) || 0;
       submissionCount++;
       rowData[9] = submissionCount.toString();
       
@@ -126,8 +126,10 @@ function findUserRow(sheet, userId) {
   
   // Start from 1 to skip header row
   for (var i = 1; i < values.length; i++) {
-    // Check column index 8 (9th column) for userId
-    if (values[i][8] === userId) {
+    // Column structure: Name[0], Attending[1], Location[2], Guest Count[3], 
+    // Bringing Kids[4], Kids Count[5], Message[6], User ID[7], Submission Count[8], Last Update[9]
+    // Check column index 7 (8th column) for userId
+    if (values[i][7] === userId) {
       return i + 1; // +1 because sheet rows are 1-indexed
     }
   }

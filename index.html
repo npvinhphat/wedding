@@ -118,9 +118,9 @@
     <div id="main-content" class="hidden" style="opacity: 1; visibility: visible; display: none;">
         <!-- Controls (Language & Music) -->
         <div class="fixed top-4 right-4 z-50 flex items-center space-x-2">
-            <button id="music-toggle" class="w-10 h-10 flex items-center justify-center rounded-full text-sm font-semibold bg-white/80 shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a98d]"><i class="fas fa-music"></i></button>
-            <button id="lang-en" class="px-3 py-2 rounded-full text-sm font-semibold bg-white/80 shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a98d]">EN</button>
-            <button id="lang-vi" class="px-3 py-2 rounded-full text-sm font-semibold bg-white/80 shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a98d]">VI</button>
+            <button id="music-toggle" class="w-10 h-10 flex items-center justify-center rounded-full text-sm font-semibold bg-white/80 text-[#a37c5b] shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a98d] hover:bg-[#c9a98d] hover:text-white transition-colors"><i class="fas fa-music"></i></button>
+            <button id="lang-en" class="px-3 py-2 rounded-full text-sm font-semibold text-[#a37c5b] shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a98d] transition-colors">EN</button>
+            <button id="lang-vi" class="px-3 py-2 rounded-full text-sm font-semibold text-[#a37c5b] shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a98d] transition-colors">VI</button>
         </div>
         <audio id="background-music" loop>
             <source src="https://eta.vgmtreasurechest.com/soundtracks/remastered-tracks-final-fantasy-viii-2022/hpsenrwdqo/09.%20Fisherman%27s%20Horizon.mp3" type="audio/mpeg">
@@ -142,7 +142,7 @@
         </section>
 
         <!-- Our Story Section -->
-        <section id="story" class="py-24 md:py-32">
+        <section id="story" class="py-16 md:py-20">
             <div class="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
                 <div class="reveal">
                     <img src="images/image-2.jpg" alt="Phat and Mai" class="rounded-lg shadow-2xl w-full h-auto">
@@ -162,64 +162,33 @@
             </div>
         </section>
 
-        <!-- Location Toggle Section -->
-        <section class="py-10">
-            <div class="container mx-auto px-6 text-center">
-                <h3 class="font-playfair text-2xl text-[#a37c5b] mb-6" data-translate-key="confirmAttendance">Confirm Your Attendance</h3>
-                <div class="flex justify-center space-x-6">
-                    <button id="location-danang" class="px-8 py-4 rounded-full text-lg font-semibold bg-[#a37c5b] text-white shadow-md hover:bg-[#8e6a4f] transition-all" data-translate-key="daNangLocation">Da Nang</button>
-                    <button id="location-hcmc" class="px-8 py-4 rounded-full text-lg font-semibold bg-white shadow-md hover:bg-gray-100 transition-all" data-translate-key="hcmcLocation">Sai Gon</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Countdown -->
-        <section class="py-20 bg-white/60">
-            <div class="text-center mb-4">
-                <h3 class="font-playfair text-2xl text-[#a37c5b]" id="countdown-title" data-translate-key="countdownTitleDanang">Da Nang Celebration Countdown</h3>
-            </div>
-            <div id="countdown" class="flex justify-center items-center space-x-4 md:space-x-8 text-center text-[#a37c5b]">
-                 <div class="reveal">
-                    <div id="days" class="font-playfair text-5xl md:text-7xl">0</div>
-                    <div class="text-sm uppercase tracking-widest" data-translate-key="days">Days</div>
-                </div>
-                <div class="font-playfair text-5xl md:text-7xl opacity-50 -mt-4 reveal" style="transition-delay: 100ms;">:</div>
-                <div class="reveal" style="transition-delay: 200ms;">
-                    <div id="hours" class="font-playfair text-5xl md:text-7xl">0</div>
-                    <div class="text-sm uppercase tracking-widest" data-translate-key="hours">Hours</div>
-                </div>
-                <div class="font-playfair text-5xl md:text-7xl opacity-50 -mt-4 reveal" style="transition-delay: 300ms;">:</div>
-                <div class="reveal" style="transition-delay: 400ms;">
-                    <div id="minutes" class="font-playfair text-5xl md:text-7xl">0</div>
-                    <div class="text-sm uppercase tracking-widest" data-translate-key="minutes">Minutes</div>
-                </div>
-                <div class="font-playfair text-5xl md:text-7xl opacity-50 -mt-4 reveal" style="transition-delay: 500ms;">:</div>
-                <div class="reveal" style="transition-delay: 600ms;">
-                    <div id="seconds" class="font-playfair text-5xl md:text-7xl">0</div>
-                    <div class="text-sm uppercase tracking-widest" data-translate-key="seconds">Seconds</div>
-                </div>
-            </div>
-        </section>
-        
         <!-- Invitation Details Section -->
-        <main id="invitation-details" class="py-24 md:py-32">
-            <div class="text-center mb-16 reveal">
+        <main id="invitation-details" class="py-16 md:py-20 bg-[#f8f3ec]">
+            <div class="text-center mb-10 reveal">
                 <h2 class="font-playfair text-4xl text-[#a37c5b]" data-translate-key="theWedding">The Wedding</h2>
                 <p class="text-lg mt-2" data-translate-key="joinUs">Join us as we celebrate</p>
             </div>
             
+            <!-- Location Toggle Section -->
+            <div class="container mx-auto px-6 text-center mb-16">
+                <div class="flex justify-center space-x-6">
+                    <button id="location-danang" class="px-8 py-4 rounded-full text-lg font-semibold shadow-md transition-all duration-300" data-translate-key="daNangLocation">Da Nang</button>
+                    <button id="location-hcmc" class="px-8 py-4 rounded-full text-lg font-semibold shadow-md transition-all duration-300" data-translate-key="hcmcLocation">Sai Gon</button>
+                </div>
+            </div>
+            
             <!-- Da Nang Wedding Details -->
-            <div id="danang-details" class="container mx-auto px-6 grid md:grid-cols-3 gap-12 text-center mb-12">
+            <div id="danang-details" class="container mx-auto px-6 max-w-4xl grid md:grid-cols-2 gap-16 text-center">
                 <div class="reveal">
                     <div class="bg-[#f8f3ec] rounded-lg p-6 shadow-md h-full flex flex-col">
                         <div class="mb-4 flex-grow">
                             <i class="fas fa-church text-4xl text-[#c9a98d] mb-4"></i>
                             <h3 class="font-playfair text-2xl" data-translate-key="theCeremony">The Ceremony</h3>
                             <p class="text-lg font-semibold mt-2 text-[#a37c5b]" data-translate-key="dateDanang">Tuesday, August 5, 2025</p>
-                            <p class="text-lg font-semibold text-[#a37c5b]" data-translate-key="timeDanang">at 5:00 PM</p>
-                        </div>
-                        <div class="bg-[#c9a98d] text-white py-2 px-4 rounded-full text-sm inline-block mx-auto">
-                            <span data-translate-key="daNangLabel">Da Nang</span>
+                            <div class="flex flex-col mt-2">
+                                <p class="font-medium text-[#a37c5b]" data-translate-key="timeReception">Reception: 6:00 PM</p>
+                                <p class="font-medium text-[#a37c5b]" data-translate-key="timeCeremony">Ceremony: 7:00 PM</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -227,35 +196,32 @@
                     <div class="bg-[#f8f3ec] rounded-lg p-6 shadow-md h-full flex flex-col">
                         <div class="mb-4 flex-grow">
                             <i class="fas fa-glass-cheers text-4xl text-[#c9a98d] mb-4"></i>
-                            <h3 class="font-playfair text-2xl" data-translate-key="theReception">The Reception</h3>
+                            <h3 class="font-playfair text-2xl" data-translate-key="venue">Venue</h3>
                             <p class="text-lg font-bold mt-2 text-[#a37c5b]" data-translate-key="venueNameDanang">Temple Beach Resort</p>
                             <p class="font-medium text-[#a37c5b]" data-translate-key="venueAddressDanang">11 Võ Nguyên Giáp, Phước Mỹ, Sơn Trà</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="reveal" style="transition-delay: 400ms;">
-                    <div class="bg-[#f8f3ec] rounded-lg p-6 shadow-md h-full flex flex-col">
-                        <div class="mb-4 flex-grow">
-                            <i class="fas fa-map-marked-alt text-4xl text-[#c9a98d] mb-4"></i>
-                            <h3 class="font-playfair text-2xl" data-translate-key="gettingThere">Getting There</h3>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Temple+Beach+Resort+Da+Nang+11+Võ+Nguyên+Giáp" target="_blank" class="text-[#a37c5b] underline" data-translate-key="viewMap">View Map</a>
+                            <div class="mt-4">
+                                <a href="https://www.google.com/maps/search/?api=1&query=Temple+Beach+Resort+Da+Nang+11+Võ+Nguyên+Giáp" target="_blank" class="text-[#a37c5b] underline flex items-center justify-center">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span data-translate-key="viewMap">View Map</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             
             <!-- Ho Chi Minh City Wedding Details -->
-            <div id="hcmc-details" class="container mx-auto px-6 grid md:grid-cols-3 gap-12 text-center hidden">
+            <div id="hcmc-details" class="container mx-auto px-6 max-w-4xl grid md:grid-cols-2 gap-16 text-center hidden">
                 <div class="reveal">
                     <div class="bg-[#f8f3ec] rounded-lg p-6 shadow-md h-full flex flex-col">
                         <div class="mb-4 flex-grow">
                             <i class="fas fa-church text-4xl text-[#c9a98d] mb-4"></i>
                             <h3 class="font-playfair text-2xl" data-translate-key="theCeremony">The Ceremony</h3>
                             <p class="text-lg font-semibold mt-2 text-[#a37c5b]" data-translate-key="dateHcmc">Monday, August 11, 2025</p>
-                            <p class="text-lg font-semibold text-[#a37c5b]" data-translate-key="timeHcmc">at 5:00 PM</p>
-                        </div>
-                        <div class="bg-[#c9a98d] text-white py-2 px-4 rounded-full text-sm inline-block mx-auto">
-                            <span data-translate-key="hcmcLabel">Sai Gon</span>
+                            <div class="flex flex-col mt-2">
+                                <p class="font-medium text-[#a37c5b]" data-translate-key="timeReception">Reception: 6:00 PM</p>
+                                <p class="font-medium text-[#a37c5b]" data-translate-key="timeCeremony">Ceremony: 7:00 PM</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -263,18 +229,15 @@
                     <div class="bg-[#f8f3ec] rounded-lg p-6 shadow-md h-full flex flex-col">
                         <div class="mb-4 flex-grow">
                             <i class="fas fa-glass-cheers text-4xl text-[#c9a98d] mb-4"></i>
-                            <h3 class="font-playfair text-2xl" data-translate-key="theReception">The Reception</h3>
+                            <h3 class="font-playfair text-2xl" data-translate-key="venue">Venue</h3>
                             <p class="text-lg font-bold mt-2 text-[#a37c5b]" data-translate-key="venueNameHcmc">Maison De Charme</p>
                             <p class="font-medium text-[#a37c5b]" data-translate-key="venueAddressHcmc">Đ. Trần Xuân Soạn, Tân Hưng, Quận 7</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="reveal" style="transition-delay: 400ms;">
-                    <div class="bg-[#f8f3ec] rounded-lg p-6 shadow-md h-full flex flex-col">
-                        <div class="mb-4 flex-grow">
-                            <i class="fas fa-map-marked-alt text-4xl text-[#c9a98d] mb-4"></i>
-                            <h3 class="font-playfair text-2xl" data-translate-key="gettingThere">Getting There</h3>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Maison+De+Charme+Đ.+Trần+Xuân+Soạn+Tân+Hưng+Quận+7+Hồ+Chí+Minh" target="_blank" class="text-[#a37c5b] underline" data-translate-key="viewMap">View Map</a>
+                            <div class="mt-4">
+                                <a href="https://www.google.com/maps/search/?api=1&query=Maison+De+Charme+Đ.+Trần+Xuân+Soạn+Tân+Hưng+Quận+7+Hồ+Chí+Minh" target="_blank" class="text-[#a37c5b] underline flex items-center justify-center">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span data-translate-key="viewMap">View Map</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -282,7 +245,7 @@
         </main>
 
         <!-- Photo Gallery -->
-        <section class="bg-white/60 py-24 md:py-32">
+        <section class="py-16 md:py-20">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 reveal">
                     <h2 class="font-playfair text-4xl text-[#a37c5b]" data-translate-key="galleryTitle">Our Moments</h2>
@@ -311,7 +274,7 @@
         </section>
 
          <!-- RSVP Section -->
-        <section id="rsvp" class="py-24 md:py-32">
+        <section id="rsvp" class="py-16 md:py-20 bg-[#f8f3ec]">
             <div class="container mx-auto px-6 max-w-xl">
                 <div class="reveal text-center">
                      <h2 class="font-playfair text-4xl text-[#a37c5b]" data-translate-key="rsvpTitle">Kindly Respond</h2>
@@ -496,7 +459,8 @@
                 ourStoryText1: "It all began with a group dinner we almost skipped — and thank goodness we didn't. It didn't happen in a flash; it actually took a few more awkward friendly gatherings before we started bonding over music, sending each other our favorite songs, and slowly building a connection that just felt right.",
                 ourStoryText2: "From dancing like dorks in the living room to getting lost on trips (but always managing to find good food), our days have been filled with laughter, cozy quiet moments, and countless weirdly ugly photos we took of each other. After 2.5 years of love, joy, and way too many inside jokes, we're finally tying the knot. We can't wait to celebrate, eat, dance — and maybe ugly cry a little — with you.",
                 theWedding: "The Wedding", joinUs: "Join us as we celebrate",
-                theCeremony: "The Ceremony", theReception: "The Reception", gettingThere: "Getting There",
+                theCeremony: "Schedule", theReception: "The Reception", gettingThere: "Getting There", venue: "Venue", 
+                timeReception: "Reception: 6:00 PM", timeCeremony: "Main Event: 7:00 PM",
                 // Location buttons
                 daNangLocation: "Da Nang",
                 hcmcLocation: "Sai Gon",
@@ -551,7 +515,8 @@
                 ourStoryText1: "Mọi chuyện bắt đầu từ một buổi ăn tối với bạn chung mà cả hai đều lười đi, nhưng rất may là chúng mình đã không bỏ lỡ. Qua vài lần gặp gỡ khá ngại ngùng, tụi mình bắt đầu kết nối với nhau qua sở thích về âm nhạc, gửi cho nhau nhiều bài hát hay ho, và dần dần xây dựng một mối gắn kết tự nhiên.",
                 ourStoryText2: "Từ những buổi sáng cuối tuần nhảy nhót không màng sự đời trong phòng khách, tới những chuyến đi mà tụi mình thường xuyên… bị lạc (nhưng luôn tìm được đồ ăn ngon), những ngày bên nhau đầy ắp tiếng cười, những khoảnh khắc yên bình ấm áp, và vô số tấm ảnh \"tả thực đẹp lạ\" mà 2 đứa chụp cho nhau. Sau 2 năm rưỡi yêu thương, chia sẻ, cùng nhiều trò đùa nhảm, tụi mình quyết định sẽ về chung một nhà. Tụi mình rất mong được ăn uống, nhảy nhót — và có thể sẽ rưng rưng chút xíu — cùng các bạn trong ngày đặc biệt này.",
                 theWedding: "Lễ Cưới", joinUs: "Hãy tham gia cùng chúng mình",
-                theCeremony: "Lễ Thành Hôn", theReception: "Tiệc Cưới", gettingThere: "Đường Đến Địa Điểm",
+                theCeremony: "Thời Gian", theReception: "Tiệc Cưới", gettingThere: "Đường Đến Địa Điểm", venue: "Địa Điểm",
+                timeReception: "Đón khách: 18:00", timeCeremony: "Lễ Tiệc: 19:00",
                 // Location buttons
                 daNangLocation: "Đà Nẵng",
                 hcmcLocation: "Sài Gòn",
@@ -600,7 +565,7 @@
             }
         };
 
-        let currentLanguage = 'en';
+        let currentLanguage = 'vi';
         // Generate a random user ID for tracking submissions 
         // Get or create a userId
         let userId;
@@ -718,36 +683,7 @@
         // Global variable to store current location
         let currentLocation = 'danang';
         
-        function startCountdown() {
-            const weddingDates = {
-                'danang': new Date('August 5, 2025 17:00:00').getTime(),
-                'hcmc': new Date('August 11, 2025 17:00:00').getTime()
-            };
-            
-            const updateCountdown = () => {
-                const now = new Date().getTime();
-                const weddingDate = weddingDates[currentLocation];
-                const distance = weddingDate - now;
-                
-                if (distance > 0) {
-                    document.getElementById('days').textContent = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    document.getElementById('hours').textContent = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    document.getElementById('minutes').textContent = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    document.getElementById('seconds').textContent = Math.floor((distance % (1000 * 60)) / 1000);
-                }
-                
-                // Update the countdown title
-                const countdownTitle = document.getElementById('countdown-title');
-                if (countdownTitle) {
-                    countdownTitle.textContent = content[currentLanguage][
-                        currentLocation === 'danang' ? 'countdownTitleDanang' : 'countdownTitleHcmc'
-                    ];
-                }
-            };
-            
-            updateCountdown(); // Run once immediately
-            return setInterval(updateCountdown, 1000); // Then run every second and return interval ID
-        }
+        // Countdown removed
 
         function handleRsvpForm() {
             const form = document.getElementById('rsvp-form');
@@ -1176,11 +1112,11 @@
             if (location === 'danang') {
                 // Apply active styles to Da Nang button
                 danangBtn.classList.add('bg-[#a37c5b]', 'text-white');
-                danangBtn.classList.remove('bg-white');
+                danangBtn.classList.remove('bg-white', 'hover:bg-gray-100');
                 
                 // Remove active styles from HCMC button
                 hcmcBtn.classList.remove('bg-[#a37c5b]', 'text-white');
-                hcmcBtn.classList.add('bg-white');
+                hcmcBtn.classList.add('bg-white', 'hover:bg-gray-100');
                 
                 // Show Da Nang details, hide HCMC details
                 document.getElementById('danang-details').classList.remove('hidden');
@@ -1188,11 +1124,11 @@
             } else {
                 // Apply active styles to HCMC button
                 hcmcBtn.classList.add('bg-[#a37c5b]', 'text-white');
-                hcmcBtn.classList.remove('bg-white');
+                hcmcBtn.classList.remove('bg-white', 'hover:bg-gray-100');
                 
                 // Remove active styles from Da Nang button
                 danangBtn.classList.remove('bg-[#a37c5b]', 'text-white');
-                danangBtn.classList.add('bg-white');
+                danangBtn.classList.add('bg-white', 'hover:bg-gray-100');
                 
                 // Show HCMC details, hide Da Nang details
                 document.getElementById('hcmc-details').classList.remove('hidden');
@@ -1236,7 +1172,6 @@
                 // Initialize main site JS after it's visible
                 setLanguage(savedLanguage); // Set language based on user preference
                 handleScrollAnimations();
-                startCountdown();
                 handleMusic();
                 handlePhotoGallery();
                 handleRsvpForm();
@@ -1255,7 +1190,9 @@
                     langEn.addEventListener('click', function() {
                         setLanguage('en');
                         langEn.classList.add('bg-[#c9a98d]', 'text-white');
+                        langEn.classList.remove('text-[#a37c5b]', 'bg-white/80');
                         langVi.classList.remove('bg-[#c9a98d]', 'text-white');
+                        langVi.classList.add('text-[#a37c5b]', 'bg-white/80');
                     });
                 }
                 
@@ -1263,18 +1200,17 @@
                     langVi.addEventListener('click', function() {
                         setLanguage('vi');
                         langVi.classList.add('bg-[#c9a98d]', 'text-white');
+                        langVi.classList.remove('text-[#a37c5b]', 'bg-white/80');
                         langEn.classList.remove('bg-[#c9a98d]', 'text-white');
+                        langEn.classList.add('text-[#a37c5b]', 'bg-white/80');
                     });
                 }
                 
-                // Highlight the active language based on saved preference
-                if (currentLanguage === 'vi') {
-                    langVi.classList.add('bg-[#c9a98d]', 'text-white');
-                    langEn.classList.remove('bg-[#c9a98d]', 'text-white');
-                } else {
-                    langEn.classList.add('bg-[#c9a98d]', 'text-white');
-                    langVi.classList.remove('bg-[#c9a98d]', 'text-white');
-                }
+                // Set Vietnamese as default and highlight it
+                langVi.classList.add('bg-[#c9a98d]', 'text-white');
+                langVi.classList.remove('text-[#a37c5b]');
+                langEn.classList.remove('bg-[#c9a98d]', 'text-white');
+                langEn.classList.add('text-[#a37c5b]', 'bg-white/80');
                 
                 // Set up location switcher buttons
                 const danangBtn = document.getElementById('location-danang');
