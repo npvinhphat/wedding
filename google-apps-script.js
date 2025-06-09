@@ -45,7 +45,6 @@ function processForm(formData) {
         "Bringing Kids",
         "Kids Count",
         "Message",
-        "Game Completed",
         "User ID",
         "Submission Count",
         "Last Update"
@@ -68,7 +67,6 @@ function processForm(formData) {
       formData.bringingKids || "No",
       formData.kidsCount || "0",
       formData.message || "",
-      formData.gameCompleted || "No",
       userId,
       "1",  // Submission count (will be incremented for existing users)
       timestamp
@@ -160,7 +158,6 @@ function sendNewSubmissionEmail(formData) {
     }
     
     body += "Message: " + formData.message + "\n";
-    body += "Game Completed: " + formData.gameCompleted + "\n";
     body += "User ID: " + formData.userId + "\n";
     body += "Submitted At: " + new Date().toLocaleString();
     
@@ -201,7 +198,6 @@ function sendUpdateEmail(formData, submissionCount) {
     }
     
     body += "Message: " + formData.message + "\n";
-    body += "Game Completed: " + formData.gameCompleted + "\n";
     body += "User ID: " + formData.userId + "\n";
     body += "Updated At: " + new Date().toLocaleString();
     

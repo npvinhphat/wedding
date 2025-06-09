@@ -7,6 +7,7 @@
     
     <!-- Favicon -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,7 +26,6 @@
             font-family: 'Cormorant Garamond', serif;
             background-color: #F8F5F2; /* A warm, creamy background */
             color: #4a4a4a;
-            overflow: hidden; /* Prevent scrolling while preloader/game is active */
         }
         .hidden { display: none !important; visibility: hidden !important; }
         #main-content:not(.hidden) { display: block !important; visibility: visible !important; }
@@ -93,23 +93,7 @@
             70% { transform: scale(1); }
         }
         
-        /* --- Flappy Game --- */
-        #game-container {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #F8F5F2;
-            z-index: 9998;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            transition: opacity 0.8s ease, visibility 0.8s;
-        }
-        #game-canvas {
-            background-color: #e0f2fe; /* Light sky blue */
-            border-radius: 8px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-        }
+
 
         /* --- Photo Gallery Lightbox --- */
         #lightbox { display: none; position: fixed; z-index: 1000; padding-top: 60px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.9); }
@@ -130,25 +114,6 @@
         </div>
     </div>
     
-    <!-- Flappy Game -->
-    <div id="game-container" class="hidden">
-        <!-- Language Toggle for Game Page -->
-        <div class="absolute top-4 right-4 z-50 flex items-center space-x-2">
-            <button id="game-lang-en" class="px-3 py-2 rounded-full text-sm font-semibold bg-white/80 shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a98d]">EN</button>
-            <button id="game-lang-vi" class="px-3 py-2 rounded-full text-sm font-semibold bg-white/80 shadow-md backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a98d]">VI</button>
-        </div>
-        
-        <div id="game-ui" class="text-center mb-4 text-[#a37c5b]">
-            <h1 class="font-playfair text-3xl" data-translate-key="gameTitle">Flappy Groom</h1>
-            <p id="game-instructions" data-translate-key="gameInstructions">Click or Tap to Fly</p>
-        </div>
-        <canvas id="game-canvas" width="320" height="480"></canvas>
-        <div id="game-buttons" class="mt-4 flex space-x-4">
-            <button id="start-game-btn" class="bg-[#a37c5b] text-white font-bold py-2 px-6 rounded-full hover:bg-[#8e6a4f] transition-colors" data-translate-key="startGame">Play</button>
-            <button id="skip-game-btn" class="text-[#a37c5b] font-bold py-2 px-6 rounded-full hover:bg-black/5 transition-colors" data-translate-key="skipGame">Skip</button>
-        </div>
-    </div>
-
     <!-- Main Website Content -->
     <div id="main-content" class="hidden" style="opacity: 1; visibility: visible; display: none;">
         <!-- Controls (Language & Music) -->
@@ -164,7 +129,7 @@
         <!-- Hero Section -->
         <section class="hero-section h-screen flex flex-col justify-end items-center text-white text-center p-8 pb-24">
             <div class="reveal">
-                <p class="text-xl tracking-widest uppercase" data-translate-key="gettingMarried">We are getting married</p>
+                <p class="text-xl tracking-widest uppercase">We are getting married</p>
                 <h1 class="font-tangerine text-8xl md:text-9xl my-4">Phát & Mai</h1>
             </div>
             <div class="absolute bottom-10 animate-bounce safari-scroll-fix">
@@ -200,7 +165,7 @@
         <!-- Location Toggle Section -->
         <section class="py-10">
             <div class="container mx-auto px-6 text-center">
-                <h3 class="font-playfair text-2xl text-[#a37c5b] mb-6">Choose Your Celebration</h3>
+                <h3 class="font-playfair text-2xl text-[#a37c5b] mb-6" data-translate-key="confirmAttendance">Confirm Your Attendance</h3>
                 <div class="flex justify-center space-x-6">
                     <button id="location-danang" class="px-8 py-4 rounded-full text-lg font-semibold bg-[#a37c5b] text-white shadow-md hover:bg-[#8e6a4f] transition-all" data-translate-key="daNangLocation">Da Nang</button>
                     <button id="location-hcmc" class="px-8 py-4 rounded-full text-lg font-semibold bg-white shadow-md hover:bg-gray-100 transition-all" data-translate-key="hcmcLocation">Sai Gon</button>
@@ -250,8 +215,8 @@
                         <div class="mb-4 flex-grow">
                             <i class="fas fa-church text-4xl text-[#c9a98d] mb-4"></i>
                             <h3 class="font-playfair text-2xl" data-translate-key="theCeremony">The Ceremony</h3>
-                            <p data-translate-key="dateDanang">Tuesday, August 5, 2025</p>
-                            <p data-translate-key="timeDanang">at 5:00 PM</p>
+                            <p class="text-lg font-semibold mt-2 text-[#a37c5b]" data-translate-key="dateDanang">Tuesday, August 5, 2025</p>
+                            <p class="text-lg font-semibold text-[#a37c5b]" data-translate-key="timeDanang">at 5:00 PM</p>
                         </div>
                         <div class="bg-[#c9a98d] text-white py-2 px-4 rounded-full text-sm inline-block mx-auto">
                             <span data-translate-key="daNangLabel">Da Nang</span>
@@ -263,8 +228,8 @@
                         <div class="mb-4 flex-grow">
                             <i class="fas fa-glass-cheers text-4xl text-[#c9a98d] mb-4"></i>
                             <h3 class="font-playfair text-2xl" data-translate-key="theReception">The Reception</h3>
-                            <p data-translate-key="venueNameDanang">Temple Beach Resort</p>
-                            <p data-translate-key="venueAddressDanang">11 Võ Nguyên Giáp, Phước Mỹ, Sơn Trà</p>
+                            <p class="text-lg font-bold mt-2 text-[#a37c5b]" data-translate-key="venueNameDanang">Temple Beach Resort</p>
+                            <p class="font-medium text-[#a37c5b]" data-translate-key="venueAddressDanang">11 Võ Nguyên Giáp, Phước Mỹ, Sơn Trà</p>
                         </div>
                     </div>
                 </div>
@@ -286,8 +251,8 @@
                         <div class="mb-4 flex-grow">
                             <i class="fas fa-church text-4xl text-[#c9a98d] mb-4"></i>
                             <h3 class="font-playfair text-2xl" data-translate-key="theCeremony">The Ceremony</h3>
-                            <p data-translate-key="dateHcmc">Monday, August 11, 2025</p>
-                            <p data-translate-key="timeHcmc">at 5:00 PM</p>
+                            <p class="text-lg font-semibold mt-2 text-[#a37c5b]" data-translate-key="dateHcmc">Monday, August 11, 2025</p>
+                            <p class="text-lg font-semibold text-[#a37c5b]" data-translate-key="timeHcmc">at 5:00 PM</p>
                         </div>
                         <div class="bg-[#c9a98d] text-white py-2 px-4 rounded-full text-sm inline-block mx-auto">
                             <span data-translate-key="hcmcLabel">Sai Gon</span>
@@ -299,8 +264,8 @@
                         <div class="mb-4 flex-grow">
                             <i class="fas fa-glass-cheers text-4xl text-[#c9a98d] mb-4"></i>
                             <h3 class="font-playfair text-2xl" data-translate-key="theReception">The Reception</h3>
-                            <p data-translate-key="venueNameHcmc">Maison De Charme</p>
-                            <p data-translate-key="venueAddressHcmc">Đ. Trần Xuân Soạn, Tân Hưng, Quận 7</p>
+                            <p class="text-lg font-bold mt-2 text-[#a37c5b]" data-translate-key="venueNameHcmc">Maison De Charme</p>
+                            <p class="font-medium text-[#a37c5b]" data-translate-key="venueAddressHcmc">Đ. Trần Xuân Soạn, Tân Hưng, Quận 7</p>
                         </div>
                     </div>
                 </div>
@@ -322,18 +287,24 @@
                 <div class="text-center mb-12 reveal">
                     <h2 class="font-playfair text-4xl text-[#a37c5b]" data-translate-key="galleryTitle">Our Moments</h2>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div class="reveal">
-                        <img src="images/image-1.jpg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                        <img src="images/moment-1.jpeg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 w-full object-contain">
                     </div>
-                     <div class="reveal" style="transition-delay: 150ms;">
-                        <img src="images/image-2.jpg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 mt-8">
+                    <div class="reveal" style="transition-delay: 150ms;">
+                        <img src="images/moment-2.jpeg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 w-full object-contain mt-6 md:mt-8">
                     </div>
-                     <div class="reveal" style="transition-delay: 300ms;">
-                        <img src="images/image-1.jpg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                    <div class="reveal" style="transition-delay: 300ms;">
+                        <img src="images/moment-3.jpeg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 w-full object-contain">
                     </div>
-                     <div class="reveal" style="transition-delay: 450ms;">
-                        <img src="images/image-2.jpg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 mt-8">
+                    <div class="reveal" style="transition-delay: 450ms;">
+                        <img src="images/moment-4.jpeg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 w-full object-contain mt-6 md:mt-0">
+                    </div>
+                    <div class="reveal" style="transition-delay: 600ms;">
+                        <img src="images/moment-5.jpeg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 w-full object-contain mt-0 md:mt-8">
+                    </div>
+                    <div class="reveal" style="transition-delay: 750ms;">
+                        <img src="images/moment-6.jpeg" class="gallery-img cursor-pointer rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 w-full object-contain mt-6 md:mt-0">
                     </div>
                 </div>
             </div>
@@ -518,21 +489,12 @@
         // --- CONTENT DICTIONARY ---
         const content = {
             en: {
-                // Game content
-                gameTitle: "Help Phát Reach Mai!",
-                gameInstructions: "Click or Tap to Fly",
-                startGame: "Play",
-                skipGame: "Skip",
-                gameWin: "You made it! Let's get married!",
-                gameOver: "Oh no! Try again?",
-                playAgain: "Play Again",
-                continueToSite: "Continue",
                 // Main site content
                 gettingMarried: "We are getting married",
                 days: "Days", hours: "Hours", minutes: "Minutes", seconds: "Seconds",
                 ourStoryTitle: "Our Story",
-                ourStoryText1: "It started with a simple hello. A shared smile across a crowded room that sparked a conversation, leading to a connection we never expected.",
-                ourStoryText2: "Our journey has been filled with laughter, adventure, and unwavering support. Now, we're ready for our greatest adventure yet, and we can't wait to share the beginning of our forever with you.",
+                ourStoryText1: "It all began with a group dinner we almost skipped — and thank goodness we didn't. It didn't happen in a flash; it actually took a few more awkward friendly gatherings before we started bonding over music, sending each other our favorite songs, and slowly building a connection that just felt right.",
+                ourStoryText2: "From dancing like dorks in the living room to getting lost on trips (but always managing to find good food), our days have been filled with laughter, cozy quiet moments, and countless weirdly ugly photos we took of each other. After 2.5 years of love, joy, and way too many inside jokes, we're finally tying the knot. We can't wait to celebrate, eat, dance — and maybe ugly cry a little — with you.",
                 theWedding: "The Wedding", joinUs: "Join us as we celebrate",
                 theCeremony: "The Ceremony", theReception: "The Reception", gettingThere: "Getting There",
                 // Location buttons
@@ -556,6 +518,8 @@
                 // Map
                 viewMap: "View Map",
                 galleryTitle: "Our Moments",
+                // Section titles
+                confirmAttendance: "Confirm Your Attendance",
                 // RSVP
                 rsvpTitle: "Kindly Respond", 
                 rsvpDeadline: "Please RSVP by July 15, 2025. You can update your response anytime.",
@@ -580,22 +544,13 @@
                 footerText: "Thank you for being part of our story."
             },
             vi: {
-                // Game content
-                gameTitle: "Giúp Phát Đến Được Mai!",
-                gameInstructions: "Nhấp Hoặc Chạm Để Bay",
-                startGame: "Chơi",
-                skipGame: "Bỏ Qua",
-                gameWin: "Bạn đã thành công! Cùng kết hôn nào!",
-                gameOver: "Ôi không! Thử lại?",
-                playAgain: "Chơi Lại",
-                continueToSite: "Tiếp Tục",
                 // Main site content
-                gettingMarried: "Chúng tôi sắp kết hôn",
+                gettingMarried: "Chúng mình sắp kết hôn",
                 days: "Ngày", hours: "Giờ", minutes: "Phút", seconds: "Giây",
-                ourStoryTitle: "Câu Chuyện Của Chúng Tôi",
-                ourStoryText1: "Tất cả bắt đầu với một lời chào đơn giản. Một nụ cười được chia sẻ qua căn phòng đông đúc đã tạo ra một cuộc trò chuyện, dẫn đến một mối liên kết mà chúng tôi không bao giờ ngờ tới.",
-                ourStoryText2: "Hành trình của chúng tôi đã và đang tràn ngập tiếng cười, những cuộc phiêu lưu và sự hỗ trợ không ngừng. Bây giờ, chúng tôi sẵn sàng cho cuộc phiêu lưu vĩ đại nhất của mình, và chúng tôi không thể chờ đợi để chia sẻ khởi đầu của \"mãi mãi\" với bạn.",
-                theWedding: "Lễ Cưới", joinUs: "Hãy tham gia cùng chúng tôi",
+                ourStoryTitle: "Câu Chuyện Của Chúng Mình",
+                ourStoryText1: "Mọi chuyện bắt đầu từ một buổi ăn tối với bạn chung mà cả hai đều lười đi, nhưng rất may là chúng mình đã không bỏ lỡ. Qua vài lần gặp gỡ khá ngại ngùng, tụi mình bắt đầu kết nối với nhau qua sở thích về âm nhạc, gửi cho nhau nhiều bài hát hay ho, và dần dần xây dựng một mối gắn kết tự nhiên.",
+                ourStoryText2: "Từ những buổi sáng cuối tuần nhảy nhót không màng sự đời trong phòng khách, tới những chuyến đi mà tụi mình thường xuyên… bị lạc (nhưng luôn tìm được đồ ăn ngon), những ngày bên nhau đầy ắp tiếng cười, những khoảnh khắc yên bình ấm áp, và vô số tấm ảnh \"tả thực đẹp lạ\" mà 2 đứa chụp cho nhau. Sau 2 năm rưỡi yêu thương, chia sẻ, cùng nhiều trò đùa nhảm, tụi mình quyết định sẽ về chung một nhà. Tụi mình rất mong được ăn uống, nhảy nhót — và có thể sẽ rưng rưng chút xíu — cùng các bạn trong ngày đặc biệt này.",
+                theWedding: "Lễ Cưới", joinUs: "Hãy tham gia cùng chúng mình",
                 theCeremony: "Lễ Thành Hôn", theReception: "Tiệc Cưới", gettingThere: "Đường Đến Địa Điểm",
                 // Location buttons
                 daNangLocation: "Đà Nẵng",
@@ -617,13 +572,15 @@
                 countdownTitleHcmc: "Đếm Ngược Đến Lễ Cưới Sài Gòn",
                 // Map
                 viewMap: "Xem Bản Đồ",
-                galleryTitle: "Khoảnh Khắc Của Chúng Tôi",
+                galleryTitle: "Khoảnh Khắc Của Chúng Mình",
+                // Section titles
+                confirmAttendance: "Xác nhận tham dự lễ cưới",
                 // RSVP
                 rsvpTitle: "Vui Lòng Phản Hồi", 
                 rsvpDeadline: "Hãy phản hồi trước ngày 15/07/2025. Bạn có thể cập nhật phản hồi của mình bất cứ lúc nào.",
                 nameLabel: "Họ Tên", 
                 attendingLabel: "Bạn sẽ tham dự chứ?",
-                attendingYes: "Vui Lòng Xác Nhận", 
+                attendingYes: "Hân Hạnh Tham Dự", 
                 attendingNo: "Tiếc Rằng Không Thể Tham Dự",
                 locationLabel: "Bạn sẽ tham dự lễ cưới ở đâu?",
                 guestCountLabel: "Số lượng khách (bao gồm bạn)",
@@ -633,10 +590,10 @@
                 kidsCountLabel: "Số lượng trẻ em",
                 messageLabel: "Để lại lời nhắn cho cặp đôi (tùy chọn)",
                 submitRsvp: "Gửi Phản Hồi",
-                rsvpConfirmYes: "Cảm ơn bạn! Chúng tôi rất mong chờ được gặp bạn.",
-                rsvpConfirmNo: "Cảm ơn bạn đã thông báo. Chúng tôi sẽ nhớ bạn!",
-                footerText: "Cảm ơn vì đã là một phần trong câu chuyện của chúng tôi.",
-                rsvpUpdateYes: "Cảm ơn bạn đã cập nhật phản hồi. Chúng tôi rất mong được gặp bạn!",
+                rsvpConfirmYes: "Cảm ơn bạn! Chúng mình rất mong chờ được gặp bạn.",
+                rsvpConfirmNo: "Cảm ơn bạn đã thông báo. Chúng mình sẽ nhớ bạn!",
+                footerText: "Cảm ơn vì đã là một phần trong câu chuyện của chúng mình.",
+                rsvpUpdateYes: "Cảm ơn bạn đã cập nhật phản hồi. Chúng mình rất mong được gặp bạn!",
                 rsvpUpdateNo: "Cảm ơn bạn đã cập nhật phản hồi. Rất tiếc vì bạn không thể tham dự.",
                 thankYouTitle: "Cảm ơn!",
                 closeButton: "Đóng"
@@ -665,9 +622,6 @@
             // Fallback
             userId = 'user_' + Math.random().toString(36).substr(2, 9);
         }
-
-        // --- FUNCTION DEFINITIONS ---
-
 
         // --- FUNCTION DEFINITIONS ---
 
@@ -1025,10 +979,6 @@
                 formData.append('userId', userId);
                 formData.append('submittedAt', new Date().toISOString());
                 
-                // Send game completion status
-                const gameCompleted = CookieUtil.getCookie('weddingGameCompleted') === 'true';
-                formData.append('gameCompleted', gameCompleted ? 'Yes' : 'No');
-                
                 if (attending) {
                     formData.append('location', location);
                     formData.append('guestCount', guestCount);
@@ -1270,12 +1220,9 @@
         function showMainContent() {
             // First make sure the main content exists and is ready
             const mainContent = document.getElementById('main-content');
-            const gameContainer = document.getElementById('game-container');
             
-            // Hide game and show main content
-            if (gameContainer) gameContainer.classList.add('hidden');
+            // Show main content
             if (mainContent) mainContent.classList.remove('hidden');
-            document.body.style.overflow = 'auto';
             
             // Use a small timeout to ensure the DOM has updated visibility before initializing
             setTimeout(() => {
@@ -1358,274 +1305,18 @@
             }, 100);
         }
 
-        // --- FLAPPY GROOM GAME LOGIC ---
-        function initializeGame() {
-            const canvas = document.getElementById('game-canvas');
-            const ctx = canvas.getContext('2d');
-            const gameUi = document.getElementById('game-ui');
-            const gameInstructions = document.getElementById('game-instructions');
-            const gameButtons = document.getElementById('game-buttons');
-            const startGameBtn = document.getElementById('start-game-btn');
-            const skipGameBtn = document.getElementById('skip-game-btn');
-            const gameLangEn = document.getElementById('game-lang-en');
-            const gameLangVi = document.getElementById('game-lang-vi');
-            
-            let gameState = 'start';
-            let score = 0;
-            const gravity = 0.15;
-            const flapStrength = -4;
-            const pipeSpeed = -1.2;
-            const pipeGap = 150;
-            const pipeSpawnInterval = 150;
-            const winScore = 3;
-            let frameCount = 0;
-            let animationFrameId;
-
-            const groomImg = new Image(); groomImg.src = 'images/image-2.jpg';
-            const brideImg = new Image(); brideImg.src = 'images/image-1.jpg';
-            const obstacleImages = [
-                'images/image-1.jpg',
-                'images/image-2.jpg'
-            ].map(src => { const img = new Image(); img.src = src; return img; });
-
-            startGameBtn.disabled = true;
-            startGameBtn.textContent = 'Loading...';
-            let loadedCount = 0;
-            const totalImages = obstacleImages.length + 2;
-            [groomImg, brideImg, ...obstacleImages].forEach(img => img.onload = () => {
-                loadedCount++;
-                if (loadedCount === totalImages) {            startGameBtn.disabled = false;
-            // Set the button text based on the current language
-            startGameBtn.textContent = content[currentLanguage].startGame;
-            // Also update the skip button text
-            skipGameBtn.textContent = content[currentLanguage].skipGame;
-                }
-            });
-
-            const player = { x: 50, y: 150, width: 40, height: 40, velocityY: 0 };
-            let pipes = [];
-            const bride = { x: canvas.width + 500, y: canvas.height / 2 - 30, width: 60, height: 60, active: false };
-
-            function resetGame() {
-                player.y = 150;
-                player.velocityY = 0;
-                pipes = [];
-                score = 0;
-                frameCount = 0;
-                bride.active = false;
-                bride.x = canvas.width + 100 * winScore;
-                gameState = 'playing';
-                gameUi.classList.add('hidden');
-                gameButtons.classList.add('hidden');
-                
-                // Cancel any previous loop and start a new one
-                if(animationFrameId) cancelAnimationFrame(animationFrameId);
-                gameLoop();
-            }
-
-            function flap() { if (gameState === 'playing') player.velocityY = flapStrength; }
-
-            function addPipe() {
-                const pipeHeight = Math.floor(Math.random() * (canvas.height - pipeGap - 100)) + 50;
-                const obstacleImg = obstacleImages[Math.floor(Math.random() * obstacleImages.length)];
-                pipes.push({ x: canvas.width, y: 0, width: 50, height: pipeHeight, img: obstacleImg, passed: false });
-                pipes.push({ x: canvas.width, y: pipeHeight + pipeGap, width: 50, height: canvas.height - pipeHeight - pipeGap, img: obstacleImg, passed: true });
-            }
-
-            function update() {
-                if (gameState !== 'playing') return;
-                player.velocityY += gravity;
-                player.y += player.velocityY;
-
-                frameCount++;
-                if (frameCount % pipeSpawnInterval === 0 && !bride.active) addPipe();
-                pipes.forEach(pipe => {
-                    pipe.x += pipeSpeed;
-                    // Check if pipe has been passed
-                    if (!pipe.passed && pipe.x + pipe.width < player.x) {
-                        pipe.passed = true;
-                        // Update score but don't display it
-                        if (!pipe.top) score++;
-                        // Activate bride after reaching winScore
-                        if (score >= winScore && !bride.active) {
-                            bride.active = true;
-                        }
-                    }
-                });
-                pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
-                if (bride.active) bride.x += pipeSpeed;
-
-                if (player.y + player.height > canvas.height || player.y < 0) endGame('over');
-                for (const pipe of pipes) {
-                    if (
-                        player.x < pipe.x + pipe.width &&
-                        player.x + player.width > pipe.x &&
-                        player.y < pipe.y + pipe.height &&
-                        player.y + player.height > pipe.y
-                    ) {
-                        endGame('over');
-                        return;
-                    }
-                }
-                
-                // Check collision with bride
-                if (
-                    bride.active &&
-                    player.x < bride.x + bride.width &&
-                    player.x + player.width > bride.x &&
-                    player.y < bride.y + bride.height &&
-                    player.y + player.height > bride.y
-                ) {
-                    endGame('win');
-                }
-            }
-
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // Draw player
-                ctx.drawImage(groomImg, player.x, player.y, player.width, player.height);
-                
-                // Draw pipes
-                pipes.forEach(pipe => {
-                    ctx.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
-                });
-                
-                // Draw bride when active
-                if (bride.active) {
-                    ctx.drawImage(brideImg, bride.x, bride.y, bride.width, bride.height);
-                }
-                
-                // Score display has been removed as requested
-            }
-            
-            function gameLoop() {
-                update();
-                draw();
-                if (gameState === 'playing') {
-                    animationFrameId = requestAnimationFrame(gameLoop);
-                }
-            }
-            
-            function endGame(status) {
-                gameState = status;
-                if(animationFrameId) cancelAnimationFrame(animationFrameId);
-
-                gameUi.classList.remove('hidden');
-                gameButtons.classList.remove('hidden');
-                
-                if (status === 'win') {
-                    // Save game completion status in a cookie (expires in 1 year)
-                    CookieUtil.setCookie('weddingGameCompleted', 'true', 365);
-                    
-                    // Store additional game completion data
-                    updateUserCookieData({
-                        gameCompleted: true,
-                        gameCompletedAt: new Date().toISOString(),
-                        gameWin: true
-                    });
-                    
-                    // Update with localized text
-                    gameInstructions.textContent = content[currentLanguage].gameWin;
-                    startGameBtn.textContent = content[currentLanguage].continueToSite;
-                    skipGameBtn.style.display = 'none';
-                } else { // 'over'
-                    // Update with localized text
-                    gameInstructions.textContent = content[currentLanguage].gameOver;
-                    startGameBtn.textContent = content[currentLanguage].playAgain;
-                    skipGameBtn.style.display = 'block';
-                    
-                    // Track game attempts
-                    const userData = getUserData();
-                    const attempts = userData.gameAttempts || 0;
-                    
-                    updateUserCookieData({
-                        gameAttempts: attempts + 1,
-                        lastGameAttempt: new Date().toISOString()
-                    });
-                }
-            }
-            
-            // --- Set up initial button listeners ---
-            canvas.addEventListener('click', flap);
-            
-            skipGameBtn.addEventListener('click', showMainContent);
-
-            startGameBtn.addEventListener('click', () => {
-                switch(gameState) {
-                    case 'start':
-                    case 'over':
-                        resetGame();
-                        break;
-                    case 'win':
-                        showMainContent();
-                        break;
-                }
-            });
-            
-            // Set up language toggle for game page
-            if (gameLangEn && gameLangVi) {
-                // Check for saved language preference
-                let savedLanguage = CookieUtil.getCookie('weddingLanguage') || 'en';
-                
-                // Set initial language state for game
-                setLanguage(savedLanguage);
-                
-                // Set active language button styling
-                if (savedLanguage === 'vi') {
-                    gameLangVi.classList.add('bg-[#c9a98d]', 'text-white');
-                    gameLangEn.classList.remove('bg-[#c9a98d]', 'text-white');
-                } else {
-                    gameLangEn.classList.add('bg-[#c9a98d]', 'text-white');
-                    gameLangVi.classList.remove('bg-[#c9a98d]', 'text-white');
-                }
-                
-                // Add click event listeners
-                gameLangEn.addEventListener('click', function() {
-                    setLanguage('en');
-                    gameLangEn.classList.add('bg-[#c9a98d]', 'text-white');
-                    gameLangVi.classList.remove('bg-[#c9a98d]', 'text-white');
-                });
-                
-                gameLangVi.addEventListener('click', function() {
-                    setLanguage('vi');
-                    gameLangVi.classList.add('bg-[#c9a98d]', 'text-white');
-                    gameLangEn.classList.remove('bg-[#c9a98d]', 'text-white');
-                });
-            }
-
-            // Initial drawing
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#a37c5b';
-            ctx.font = '20px "Playfair Display"';
-            ctx.textAlign = 'center';
-            ctx.fillText('Get Ready!', canvas.width/2, canvas.height/2);
-        }
-
         // --- MAIN INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             initializeSite();
             const preloader = document.getElementById('preloader');
-            const gameContainer = document.getElementById('game-container');
             
             // Load saved language preference
             const savedLanguage = CookieUtil.getCookie('weddingLanguage') || 'en';
             currentLanguage = savedLanguage;
             
-            // Check if user has already completed the game
-            const gameCompleted = CookieUtil.getCookie('weddingGameCompleted') === 'true';
-            
             window.setTimeout(() => {
                 preloader.classList.add('hidden');
-                
-                if (gameCompleted) {
-                    // Skip game if already completed
-                    showMainContent();
-                } else {
-                    // Show game if not completed
-                    gameContainer.classList.remove('hidden');
-                    initializeGame();
-                }
+                showMainContent();
             }, 1500);
         });
     </script>
