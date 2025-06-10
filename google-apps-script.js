@@ -161,7 +161,8 @@ function sendNewSubmissionEmail(formData) {
     
     body += "Message: " + formData.message + "\n";
     body += "User ID: " + formData.userId + "\n";
-    body += "Submitted At: " + new Date().toLocaleString();
+    body += "Submitted At: " + new Date().toLocaleString() + "\n\n";
+    body += "View all responses: https://docs.google.com/spreadsheets/d/1XDAKnZhTZ9Z0aa6lC_WC9SSsmd98vY91fhjWOuuk2HE/edit?gid=1755333359#gid=1755333359";
     
     if (EMAILS && EMAILS.length > 0) {
       // Send to all email recipients
@@ -201,7 +202,8 @@ function sendUpdateEmail(formData, submissionCount) {
     
     body += "Message: " + formData.message + "\n";
     body += "User ID: " + formData.userId + "\n";
-    body += "Updated At: " + new Date().toLocaleString();
+    body += "Updated At: " + new Date().toLocaleString() + "\n\n";
+    body += "View all responses: https://docs.google.com/spreadsheets/d/1XDAKnZhTZ9Z0aa6lC_WC9SSsmd98vY91fhjWOuuk2HE/edit?gid=1755333359#gid=1755333359";
     
     if (EMAILS && EMAILS.length > 0) {
       // Send to all email recipients
